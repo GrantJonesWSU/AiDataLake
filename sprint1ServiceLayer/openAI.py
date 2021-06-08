@@ -1,5 +1,9 @@
-import os
+import os, cgi
 import openai
+
+form = cgi.FieldStorage()
+form.getvalue("searchSubmit")
+pn=str(form.getvalue("searchSubmit"))
 
 def gpt3(stext):
     openai.api_key = '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'
@@ -15,9 +19,10 @@ def gpt3(stext):
     content = response.choices[0].text.split('.')
     print(content)
     return response.choices[0].text
+respond = gpt3(pn)
+print('<form>')
 
-
-query = input('Question: ')
-response = gpt3(query)
-print(response)
+#query = input('Question: ')
+#response = gpt3(query)
+#print(response)
 
