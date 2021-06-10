@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" type="css" href="style.css">
+  <title>GPT-2 Database Tool</title>
+  
+
+</head>
+
+
+<body>
+      <div name="UserLogin">
+         <form action="register.php" method="POST" id="searchSubmit">
+          <button target="_blank" type="submit" value="Login" name="loginPrompt">Login</button>
+        </form> 
+            
+      </div>
+<!-- ***************************************** -->
+
+      <div name="Header">
+        <h1>Database Navigation Optimizer</h1>
+        <h3>
+          Enter plain English commands and have them converted into SQL queries
+          for designated database
+        </h3>
+      </div>
+<!-- ***************************************** -->
+      <div name="topnav">
+        <form action="buttonHandler.php" method="POST" id="connectToDatabase"><button type="submit" value="connectToDatabase" name="connectToDatabase">Connect To Database</button></form>
+        <form action="buttonHandler.php" method="POST" id="userHistory"><button type="submit" value="userHistory" name="userHistory">User History</button></form>
+        <form action="buttonHandler.php" method="POST" id="recentMeta"><button type="submit" value="recentMeta" name="recentMeta">Recent Search Metadata</button></form>
+      </div>
+<!-- ***************************************** -->
+      <div name="searchBar">
+        <form action="openAI.py" method="POST" id="searchSubmit">
+          <input type="text" name="search" id="search">
+          <button target="_blank" type="submit" value="Search" name="searchSubmit">Search</button>
+        </form>
+      </div>
+<!-- ***************************************** -->
+    
+</body>
+</html>
