@@ -1,31 +1,52 @@
+from django.http import request
+from django.shortcuts import render, redirect
 import re
 from django.utils.timezone import datetime
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.shortcuts import redirect
-from frontend.models import GptIO
-from frontend.forms import GptIOForm
-from frontend.gptProcessing import GetGptResponse
-from django.views.generic import ListView
+from .forms import NewUserForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages #import messages
+from django.contrib.auth.forms import AuthenticationForm
+
+ 
 
 # Create your views here.
-
-class GptResponseView(ListView):
-    model = GptIO
-
-    def get_context_data(self, **kwargs):
-        context = super(GptResponseView, self).get_context_data(**kwargs)
-        return context
-
 def home_view(request):
-    form = GptIOForm(request.POST or None)
+	return render(request,"home.html")
 
-    if request.method == "POST":
-        if form.is_valid():
-            message = form.save(commit=False)
-            message.output_text = GetGptResponse(message.input_text)
-            message.log_date = datetime.now()
-            message.save()
-            return redirect("gpt_response")
-    else:
-        return render(request, "frontend/home.html", {"form": form})
+def instruction_view(request):
+	return render(request,"instructions.html")
+
+def register_request(request):
+	if request.method == "POST":
+		form = NewUserForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			login(request, user)
+			messages.success(request, "Registration successful." )
+			return redirect("home")
+		messages.error(request, "Unsuccessful registration. Invalid information.")
+	form = NewUserForm
+	return render (request=request, template_name="register.html", context={"register_form":form})
+
+def login_request(request):
+	if request.method == "POST":
+		form = AuthenticationForm(request, data=request.POST)
+		if form.is_valid():
+			username = form.cleaned_data.get('username')
+			password = form.cleaned_data.get('password')
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				login(request, user)
+				messages.info(request, f"You are now logged in as {username}.")
+				return redirect("home")
+			else:
+				messages.error(request,"Invalid username or password.")
+		else:
+			messages.error(request,"Invalid username or password.")
+	form = AuthenticationForm()
+	return render(request=request, template_name="login.html", context={"login_form":form})
+
+def logout_request(request):
+	logout(request)
+	messages.info(request, "You have successfully logged out.") 
+	return redirect("home")

@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "bibhasdn.django-html",
+        "batisteo.vscode-django",
+        "bibhasdn.django-snippets",
+        "ms-python.vscode-pylance"
+    ]
+}

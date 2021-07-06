@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>GPT-3 Database Tool</title>
+	<style>
+		body {
+		  background-color: #bf776b;
+		}
+
+	
+		h1,h2,h3,h4 {
+		text-align: center;
+		}
+		
+		table{
+		  margin-left: auto;
+		  margin-right: auto;
+		}
+		
+		.header {
+		  display: block;
+		  justify-content: center;
+		  align-items: center;
+		  height: 12%;
+		  background-color: #f59064;
+		  border: 2px solid black;
+		  padding-bottom: 1%;
+		  padding-top: 1%;
+		}
+		
+		.row{
+		column-count:2;
+		}
+		
+		.column {
+		  column-width: 50%;
+		  break-inside: avoid;
+		  page-break-inside: avoid;
+		}
+		
+		input[type="submit"] {
+		  background-color: #404385;
+		  border: none;
+		  color: white;
+		  padding: 5px 10px;
+		  text-align: center;
+		  font-size: 12px;
+		  opacity: 0.6;
+		  transition: 0.3s;
+		  display: flex;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+		
+		.header input[type="submit"] {
+		  background-color: #40ba92;
+		  border: none;
+		  color: white;
+		  padding: 5px 10px;
+		  text-align: center;
+		  font-size: 12px;
+		  transition: 0.3s;
+		  display: flex;
+		  text-decoration: bold;
+		  cursor: pointer;
+		}
+
+		input:hover {opacity: 1}
+		
+		
+		#inputSide{
+		border: 2px solid maroon;
+		background-color: #d9d3b1;
+		padding-top: 1%;
+		padding-bottom: 1%;
+		}
+		
+		#outputSide{
+		padding-top: 1%;
+		padding-bottom: 1%;
+		}
+		
+		#userLoginForm{
+		margin: 0 auto; 
+		width:1%;
+		}
+		
+		#instructionsForm{
+		margin: 0 auto; 
+		width:1%;
+		}
+		
+		#output1{
+		background-color: #eff4ab;
+		border: 2px solid maroon;
+		padding-top: 1%;
+		padding-bottom: 1%;
+		}
+		
+		#output2{
+		background-color: #f9ceab;
+		border: 2px solid maroon;
+		padding-top: 1%;
+		padding-bottom: 1%;
+		}
+				
+		
+	
+		
+		
+		
+	</style>
+</head>
+<!-- ***************************************** -->
+<body>
+<div class="header">
+		{%if user.is_authenticated%}
+		<form method="POST" action="/logout" id="userLoginForm">
+			<input type="submit" id="userLogout" value="Sign Out"></input>
+			{% csrf_token %}
+			<input type="submit" id="userLogin" value="Sign In"></input>
+		</form>
+		{% else %}
+		<form method="POST" action="/login" id="userLoginForm">
+			<input type="submit" id="userLogout" value="Sign Out"></input>
+			{% csrf_token %}
+			<input type="submit" id="userLogin" value="Sign In"></input>
+		</form>
+		 {% endif %}
+	
+        <h1>Database Navigation Optimizer</h1>
+		
+        <h3>
+          Enter plain English commands and have them converted into SQL queries
+          for designated database
+        </h3>
+		
+		
+		
+		<form method="POST" action="/instructions" id="instructionsForm">
+			{% csrf_token %}
+			<input type="submit" name="readMe" id="readMe" value="Instructions"></input>
+		</form>
+		
+</div>
+
+<br>
+
+<div class="row">
+  <div class="column" id="inputSide">
+  	<div id="databaseConnection">
+	<h3><u>Upload Database .SQL File</u></h3>
+	
+		<table>
+			<tr>	
+				<td>
+				<form method="POST" enctype="multipart/form-data" action="/fileUpload" id="fileUploadForm">
+				{% csrf_token %}
+					<input type="file" name="myFile" id="myFile">
+				</td>
+				
+				<td>
+					<input type="submit" name="fileUpload" id="fileUpload" value="Submit File"></input>
+				</form>
+				</td>
+				
+				
+			</tr>
+		</table>
+	</div>
+<br>
+<!-- ***************************************** -->
+
+	<div id="buttonsBar">
+	<h3><u>
+	Various Buttons For Functionality
+	</u>
+	</h3>
+	
+		<table>
+			<tr>
+				<td>
+				
+					<form method="POST" action="/userHistory">
+					{% csrf_token %}
+					<input type="submit" name="userHistory" id="userHistory" value="User History"></input>
+					</form>
+				
+				</td>
+				
+			
+				<td>
+				
+					<form method="POST" action="/recentMeta">
+					{% csrf_token %}
+					<input type="submit" name="recentMeta" id="recentMeta" value="Recent Meta"></input>
+					</form>
+				
+				</td>
+
+			</tr>
+		</table>
+	</div>
+	
+	
+	<br>
+    <br>
+        
+      
+<!-- ***************************************** -->
+      <div id="searchBar">
+	  <h3><u>
+	  GPT-3 Functionality
+	  </u></h3>
+	  
+	  <table>
+	  <tr>
+	  <h4>
+		Enter English Question To Convert To SQL Command
+	  </h4>
+	  </tr>
+	  <tr>
+	  <td>
+	  
+	  <form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchSubmitForm">
+		{% csrf_token %}
+		<input type="text" placeholder="Enter English to convert" name="search" id="search">
+	   </td>
+	   
+	   <td>
+		<input type="submit" id="searchSubmit" value="Search"></submit>
+	 </form>
+	 
+	  </td>
+		
+	  </tr>
+	  </table>
+	  
+	  <br>
+	  
+	  <table>
+	  <tr>
+	  <h4 style="alight-text: center">
+		Enter English Question Regarding Location Of Data
+	  </h4>
+	  </tr>
+	  
+	  <tr>
+	  <td>
+	  
+	  <form method="POST" enctype="multipart/form-data" action="/GPT3Location" id="searchLocationSubmitForm">
+		{% csrf_token %}
+		<input type="text" placeholder="Enter English to convert" name="searchLocation" id="searchLocation">
+	  </td>
+	  
+	  <td>
+		<input type="submit" id="searchSubmit" value="Search"></input>
+	 </form>
+	 
+	  </td>
+		
+	  </tr>
+	  </table>
+      </div>
+  </div>
+  
+ <!-- ***************************************** -->
+  <div class="column" id="outputSide">
+	<div id="output1">
+		<h3><u>System Message</u></h3>
+		<p id="systemMessage"></p>
+	</div>
+	
+	<br>
+	
+	<div id="output2">
+		<h3><u>Output</u></h3>
+		<p id="outputArea"></p>
+	</div>
+  </div>
+</div>
+
+
+	  
+<!-- ***************************************** -->
+
+<!-- ***************************************** -->
+
+	
+	<script>
+	//Handle Request
+	var fileUploadSubmit=function()
+	 {
+		var file = document.getElementById('myFile').value;
+		var file_extension=file.split('.').pop().toLowerCase();
+		
+		if (file_extension!="sql")
+		{
+			//Write Error Message
+			//document.getElementById('systemMessages').innerHTML= "Error: File Upload Type Must Be .SQL";  
+			alert("Error: File Upload Type Must Be .SQL");
+		}
+	 }
+	 
+
+	
+
+
+	//Get Request On Button Click
+	document.getElementById('fileUpload').onclick = fileUploadSubmit;
+
+	</script>
+</body>
+</html>
