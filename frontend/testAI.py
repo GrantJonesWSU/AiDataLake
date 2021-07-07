@@ -4,12 +4,18 @@
 #Imports
 from django.shortcuts import render
 from django.http import HttpRequest
-from rest_framework.request import Request
-import os
 from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from .models import *
+from django.db import models
+from frontend.gpt3 import createDatabaseSchemaString
+from django.utils.timezone import datetime
 
+
+#from rest_framework.request import Request
+
+#from .models import RequestTable
 
 #Functions
 def find_between( s, first, last ):
@@ -38,6 +44,7 @@ def file_upload(request):
 	if request.method == "POST":
 		#Contain db file in local memory
 		#Also manipulate as string for file type checking
+
 		readDB=request.FILES
 		fileName=str(readDB["myFile"])
 		
@@ -142,39 +149,64 @@ def file_upload(request):
 			#----------------------------------------------------
 			#Format For Writing To DB
 			#----------------------------------------------------
-
+			print(tableColumn)
 			for i in range(len(tableColumn)):
 				groupingKey=i
 
 				for j in range(len(tableColumn[i])):
+
+					
+
 					if(j==0):
-						elementName=tableColumn[i][j]
+						elementNameTemp=tableColumn[i][j]
 						dataTypeTemp="N/A"
 						tableColumnCheck=0
 
 						#Test Block For Display
 						'''
-						print("Element Name: ", elementName)
+						print("Element Name: ", elementNameTemp)
 						print("DataType: ",dataTypeTemp)
 						print("Table/Column: ",tableColumnCheck)
 						print("Grouping Key: ",groupingKey)
 						print("-------------------")
 						'''
 
-					elif(j%2!=0):
-						elementName=tableColumn[i][j]
-						dataTypeTemp=tableColumn[i][j+1]
-						tableColumnCheck=1
+					else:	
+						if(j%2!=0):
+							elementNameTemp=tableColumn[i][j]
+							dataTypeTemp=str(tableColumn[i][j+1])
+							tableColumnCheck=1
 
-						#Test Block For Display
-						'''
-						print("Element Name: ", elementName)
-						print("DataType: ",dataTypeTemp)
-						print("Table/Column: ",tableColumnCheck)
-						print("Grouping Key: ",groupingKey)
-						print("-------------------")
-						'''
-						
+							#Test Block For Display
+							'''
+							print("Element Name: ", elementNameTemp)
+							print("DataType: ",dataTypeTemp)
+							print("Table/Column: ",tableColumnCheck)
+							print("Grouping Key: ",groupingKey)
+							print("-------------------")
+							'''
+							
+					if(j==0 or j%2!=0):	
+						row = UserDatabaseEntity(
+							dbName=fileName,
+							elementName=elementNameTemp,
+							dataType=dataTypeTemp,
+							tableColumn=tableColumnCheck,
+							localGroupingKey=groupingKey)
+						row.save()
 
-			#Returns HTML Default View, Edit to route to views instead								
-			return render(request,"home.html")
+					
+					
+
+					
+	
+		db = UserDatabase(
+			dbName=fileName,
+			schemaString=createDatabaseSchemaString(fileName),
+			dateTimeCreated=datetime.now()
+		)
+		db.save()
+
+		print("DONE WRITING USER DB TO SYSTEM DB")
+		#Returns HTML Default View, Edit to route to views instead								
+		return render(request,"home.html")

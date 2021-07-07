@@ -20,6 +20,6 @@ from django.urls import include, path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    parth("", include("frontend.urls")),
+    path("", include("frontend.urls")),
     path('admin/', admin.site.urls)
 ]
