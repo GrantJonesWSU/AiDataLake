@@ -12,7 +12,7 @@ from frontend.models import UserDatabaseEntity
 #----------------------------------------------------
 
 #gpt-3 key
-openai.api_key = "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"
+openai.api_key = "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"
 
 #----------------------------------------------------
 #Handles GPT3 Operation
@@ -26,6 +26,7 @@ def GetGptResponse(gpt_input):
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
+        stop=["\n"]
     )
 
     return response.choices[0].text

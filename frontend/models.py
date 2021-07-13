@@ -65,3 +65,8 @@ class UserDatabaseEntity(models.Model):
 
     class Meta:
         db_table = 'UserDatabaseEntity'
+
+class TrainingCorpus(models.Model):
+    inputText = models.TextField()
+    outputText = moedls.TextField()
+    
