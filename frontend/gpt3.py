@@ -9,6 +9,7 @@ from django.http import HttpRequest
 from rest_framework.request import Request
 from frontend.models import UserDatabase
 from frontend.models import UserDatabaseEntity
+from frontend.models import TrainingCorpus
 #----------------------------------------------------
 
 #gpt-3 key
@@ -79,3 +80,13 @@ def TrainGptInputSql(input, DbId):
 
 
     return trainedInput
+
+def TrainGptCorpus(input):
+    trainedInput = ""
+    corpus = TrainingCorpus.objects.all()
+
+    # need to add corpus schema here before the inputs and outputs
+
+    # add input and output for each entity in the training corpus
+    for entity in corpus:
+        trainedInput += "INSTRUCTIONS: " + entity.schemaText + "\nINPUT: " + entity.inputText + "\nOUTPUT: " + entity.outputText + "\n\n"
