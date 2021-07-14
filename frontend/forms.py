@@ -1,7 +1,23 @@
 from django import forms
-from frontend.models import GptIO
+from frontend.models import UserLogin
+from frontend.models import GptInputOutput
+from frontend.models import UserDatabase
+from frontend.models import UserDatabaseEntity
 
-class GptIOForm(forms.ModelForm):
+class UserLoginForm(forms.ModelForm):
     class Meta:
-        model = GptIO
-        fields = ("input_text",)  # Note: the trailing comma is required
+        model = UserLogin
+        fields = ("username", "password",)
+
+class GptInputOutputForm(forms.ModelForm):
+    class Meta:
+        model = GptInputOutput
+        fields = ("userInput", "sqlGeneration")
+
+class UserDatabaseForm(forms.ModelForm):
+    class Meta:
+        model = UserDatabase
+
+class UserDatabaseEntityForm(models.Model):
+    class Meta:
+        model = UserDatabaseEntity
