@@ -3,6 +3,7 @@ from django.urls import path
 from frontend import views
 from frontend import testAI
 from frontend import gpt3
+from frontend import decorators
 
 urlpatterns = [
     path('', views.home_view, name='home'),
@@ -13,4 +14,5 @@ urlpatterns = [
     path('recentMeta', views.recent_meta, name='recentMeta'),
     path('GPT3', views.gpt_view, name='gpt3'),
     path('GPT3Sql', views.gpt_sql_view, name='gpt3sql'),
+    path('loginNeeded', decorators.non_user, name='NAU'),
 ]

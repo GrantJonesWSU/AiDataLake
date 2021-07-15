@@ -12,7 +12,7 @@ from frontend.models import UserDatabaseEntity
 #----------------------------------------------------
 
 #gpt-3 key
-openai.api_key = "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"
+openai.api_key = "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"
 
 #----------------------------------------------------
 #Handles GPT3 Operation

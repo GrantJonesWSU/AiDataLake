@@ -11,6 +11,8 @@ from frontend.models import UserDatabaseEntityManager
 from frontend.gpt3 import GetGptResponse
 from frontend.gpt3 import TrainGptInputGeneric
 from frontend.gpt3 import TrainGptInputSql
+from frontend.decorators import non_user
+from django.contrib.auth.decorators import login_required 
 
 
 # Create your views here.
@@ -24,13 +26,14 @@ def instruction_view(request):
 def user_login(request):
 	# needs to render the login page and then upon login
 	# redirect to the home page
-	return render(request, "home.html")
+	return render(request, "login.html")
 
-#Handles DB Schema File
+#Handles DB Schema File\
 def file_upload(request):
 	return render(request,"home.html")
 
 #Handles User History Query
+@login_required(login_url='userLogin')
 def user_history(request):
 	userHistory = GptInputOutput.objects.all()
 	# fetch the history and then send to page render
@@ -38,6 +41,7 @@ def user_history(request):
 	return render(request,"home.html", {"user_history_list" : userHistory})
 
 #Handles Recent Meta Query
+@login_required(login_url='userLogin')
 def recent_meta(request):
 	recentMeta = UserDatabaseEntity.objects.all()
 
