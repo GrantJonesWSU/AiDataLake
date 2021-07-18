@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Password Reset Requested
+From: admin@example.com
+To: landgrd@gmail.com
+Date: Sat, 17 Jul 2021 01:09:49 -0000
+Message-ID: <162648418915.26280.7014649829571163156@Dylan-PC.attlocal.net>
+
+
+Hello,
+
+We received a request to reset the password for your account for this email address. To initiate the password reset process for your account, click the link below.
+
+http://127.0.0.1:8000/reset/NA/apwdgd-b6ed0da54d64173af6dcaaba306ce6c8/
+
+This link can only be used once. If you need to reset your password again, please visit http://127.0.0.1:8000 and request another reset.
+
+If you did not make this request, you can simply ignore this email.
+
+Sincerely,
+The Website Team
+
+
+-------------------------------------------------------------------------------
