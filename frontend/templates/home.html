@@ -159,7 +159,7 @@
 				    </form>
 				  </td>
 				</tr>
-				<!--rubel: I created a function to grab the chosen DB -->
+				<!--rubel: I created a function to grab the chosen DB name and add it as a hidden input to both the gpt3 forms.-->
 				<tr>
 					<td>
 						<select id="userDBselect" onchange="userDBChanged(this)">
@@ -360,7 +360,7 @@
 	//Get Request On Button Click
 	document.getElementById('fileUpload').onclick = fileUploadSubmit;
 
-	// This will update the gpt3 forms whenever the user selects one of their databases
+	// rubel: This will update the gpt3 forms whenever the user selects one of their databases
 	userDBChanged = (selectform) => {
 		document.getElementById('gpt3sql-userDB').value = selectform.value
 		document.getElementById('gpt3-userDB').value = selectform.value
