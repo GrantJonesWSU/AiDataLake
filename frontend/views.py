@@ -52,9 +52,8 @@ def gpt_view(request):
 
 		# Store Query String
 		queryString=readRequest["genericGptInput"]
-		SQLVersion = readRequest["SQLFlavor"]
 
-		trainedInput = TrainGptInputSql(queryString, 1, SQLVersion)
+		trainedInput = TrainGptInputGeneric(queryString, 1)
 		gptOutput = GetGptResponse(trainedInput)
 
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
@@ -72,7 +71,7 @@ def gpt_sql_view(request):
 		# Store Query String
 		queryString=readRequest["sqlGptInput"]
 
-		trainedInput = TrainGptInputGeneric(queryString, 1)
+		trainedInput = TrainGptInputSql(queryString, 1, SQLVersion)
 		gptOutput = str(GetGptResponse(trainedInput))
 
 		# Save to Database

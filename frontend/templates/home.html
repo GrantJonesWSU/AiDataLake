@@ -215,10 +215,10 @@
 	    </tr>
 	    <tr>
         <td>
-      	  
-          <form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchLocationSubmitForm">
+      	  <!--rubel: form request URLs and names were mismatched so I switched them-->
+          <form method="POST" enctype="multipart/form-data" action="/GPT3sql" id="searchLocationSubmitForm">
       	  	{% csrf_token %}
-		        <input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
+		        <input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
 				  
 				
         </td>
@@ -226,7 +226,7 @@
 	    </tr>
 		<tr>
 		<td>
-		  <h4>Choose a Database:</h4>
+		  <h4>Choose a SQL version:</h4>
 			</td>
 		</tr>
 		<tr>
@@ -259,10 +259,10 @@
   	  </tr>
 	    <tr>
         <td>
-
-	        <form method="POST" enctype="multipart/form-data" action="/GPT3Sql" id="searchSubmitForm">
+			<!--rubel: form request URLs and names were mismatched so I switched them-->
+	        <form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchSubmitForm">
 	          {% csrf_token %}
-		        <input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
+		        <input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
 	      
         </td>
 	   
