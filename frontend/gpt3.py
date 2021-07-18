@@ -9,11 +9,10 @@ from django.http import HttpRequest
 from rest_framework.request import Request
 from frontend.models import UserDatabase
 from frontend.models import UserDatabaseEntity
-from frontend.models import TrainingCorpus
 #----------------------------------------------------
 
 #gpt-3 key
-openai.api_key = "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"
+openai.api_key = "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"
 
 #----------------------------------------------------
 #Handles GPT3 Operation
@@ -72,11 +71,13 @@ def TrainGptInputGeneric(input, DbId):
 
     return trainedInput
 
-def TrainGptInputSql(input, DbId):
+def TrainGptInputSql(input, DbId, SQLVersion):
     database = UserDatabase.objects.get(id=DbId)
 
     # add currently used database schema string to input and return
-    trainedInput = database.schemaString + " Return a syntactically correct MySQL statement based on the given input.\nINPUT: " + input + "\nOUTPUT: "
+    trainedInput = database.schemaString + \
+        " Return a syntactically correct {} compatible SQL statement based on the given input.\nINPUT: ".format(SQLVersion) + \
+        input + "\nOUTPUT: "
 
 
     return trainedInput
