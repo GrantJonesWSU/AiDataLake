@@ -143,10 +143,11 @@
 <div class="row">
   <div class="column" id="inputSide">
   	<div id="databaseConnection">
-	    <h3><u>Upload Database .SQL File</u></h3>
+	    <h3><u>Choose or Upload Database .SQL File</u></h3>
 	
-		  <table>
-			  <tr>	
+		<table>
+			<tbody>
+			    <tr>	
 				  <td>
 				    <form method="POST" enctype="multipart/form-data" action="/fileUpload" id="fileUploadForm">
 				      {% csrf_token %}
@@ -157,9 +158,20 @@
 					    <input type="submit" name="fileUpload" id="fileUpload" value="Submit File"></input>
 				    </form>
 				  </td>
-				
-				
-			</tr>
+				</tr>
+				<!--rubel: I created a function to grab the chosen DB -->
+				<tr>
+					<td>
+						<select id="userDBselect" onchange="userDBChanged(this)">
+							{% if user_databases %}
+								{% for dbName in user_databases %}
+								<option value="{{ dbName }}">{{ dbName }}</option>
+								{% endfor %}
+							{% endif %}
+						</select>
+					</td>
+				</tr>
+			</tbody>
 		</table>
 	</div>
   <br>
@@ -219,7 +231,7 @@
           <form method="POST" enctype="multipart/form-data" action="/GPT3sql" id="searchLocationSubmitForm">
       	  	{% csrf_token %}
 		        <input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
-				  
+				<input id="gpt3sql-userDB" type="hidden" name="userDB" value="{% if user_databases %}{{user_databases.0}}{%endif%}">
 				
         </td>
 		
@@ -263,7 +275,7 @@
 	        <form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchSubmitForm">
 	          {% csrf_token %}
 		        <input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
-	      
+				<input id="gpt3-userDB" type="hidden" name="userDB" value="{% if user_databases %}{{user_databases.0}}{%endif%}">
         </td>
 	   
 	      <td>
@@ -343,13 +355,21 @@
 			alert("Error: File Upload Type Must Be .SQL");
 		}
 	 }
-	 
-
-	
 
 
 	//Get Request On Button Click
 	document.getElementById('fileUpload').onclick = fileUploadSubmit;
+
+	// This will update the gpt3 forms whenever the user selects one of their databases
+	userDBChanged = (selectform) => {
+		document.getElementById('gpt3sql-userDB').value = selectform.value
+		document.getElementById('gpt3-userDB').value = selectform.value
+		console.log('formdata updated to contain ' + selectform.value)
+	}
+	
+
+
+
 
 	</script>
 </body>

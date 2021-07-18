@@ -15,6 +15,17 @@ from frontend.gpt3 import TrainGptInputSql
 
 # Create your views here.
 def home_view(request):
+	# rubel: feeds database list to template, needs to be copied to other views
+	UserLogin = 1 # replace with request formdata from authentication?????
+	try:
+		# Find all dbs in UserDatabase with the user ID, most recent one should appear first.
+		queryset = UserDatabase.objects.filter(userId_id=UserLogin).order_by("-dateTimeCreated")
+		print([db.dbName for db in queryset])
+		return render(request, "home.html", {"user_databases": [db.dbName for db in queryset]})
+	except UserDatabase.DoesNotExist:
+		print(UserDatabase.DoesNotExist)
+		pass
+	
 	return render(request,"home.html")
 
 def instruction_view(request):
