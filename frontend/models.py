@@ -69,4 +69,4 @@ class UserDatabaseEntity(models.Model):
 class TrainingCorpus(models.Model):
     schemaText = models.TextField()
     inputText = models.TextField()
-    outputText = moedls.TextField()
+    outputText = models.TextField()
