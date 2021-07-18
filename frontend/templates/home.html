@@ -219,16 +219,34 @@
           <form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchLocationSubmitForm">
       	  	{% csrf_token %}
 		        <input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
-	      
+				  
+				
         </td>
+		
+	    </tr>
+		<tr>
+		<td>
+		  <h4>Choose a Database:</h4>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<select name="SQLFlavor" id="SQLFlavor" required>
+				<option value="PostGreSQL">PostGreSQL</option>
+				<option value="MySQL">MySQL</option>
+				<option value="SQLite">SQLite</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+		
 	      <td>
 		    
             <input type="submit" id="searchSubmit" value="Search"></input>
 	        </form>
 	 
 	      </td>
-		
-	    </tr>
+		</tr>
 	  </table>
 	  
 	  <br>
