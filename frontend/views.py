@@ -53,8 +53,9 @@ def gpt_view(request):
 		# Store Query String
 		queryString=readRequest["genericGptInput"]
 
+		# Need to change the hardcoded 1 to a stored db name for the user to select
 		trainedInput = TrainGptInputGeneric(queryString, 1)
-		gptOutput = GetGptResponse(trainedInput)
+		gptOutput = "OUTPUT: " + GetGptResponse(trainedInput)
 
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
 		gptObject.save()
@@ -71,8 +72,9 @@ def gpt_sql_view(request):
 		# Store Query String
 		queryString=readRequest["sqlGptInput"]
 
+		# Need to change the hardcoded 1 to a stored db name for the user to select
 		trainedInput = TrainGptInputGeneric(queryString, 1)
-		gptOutput = str(GetGptResponse(trainedInput))
+		gptOutput = "OUTPUT: SELECT " + str(GetGptResponse(trainedInput))
 
 		# Save to Database
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())

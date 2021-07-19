@@ -27,14 +27,14 @@ def GetGptResponse(gpt_input):
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
-        stop=["\n"]
+        stop=["\n\n"]
     )
 
     return response.choices[0].text
 
 def createDatabaseSchemaString(dbName):
     
-    schemaString = "INSTRUCTIONS: The currently selected database has "
+    schemaString = "Instruction: The currently selected database has "
 
     entitySet = UserDatabaseEntity.objects.filter(dbName=dbName)
 
@@ -68,7 +68,7 @@ def TrainGptInputGeneric(input, DbId):
     database = UserDatabase.objects.get(id=DbId)
     
     # add currently used database schema string to input and return
-    trainedInput = database.schemaString + "\nINPUT: " + input + "\nOUTPUT: "
+    trainedInput = database.schemaString + "\Input: " + input + "\Output: "
 
     return trainedInput
 
@@ -76,7 +76,7 @@ def TrainGptInputSql(input, DbId):
     database = UserDatabase.objects.get(id=DbId)
 
     # add currently used database schema string to input and return
-    trainedInput = database.schemaString + " Return a syntactically correct MySQL statement based on the given input.\nINPUT: " + input + "\nOUTPUT: "
+    trainedInput = database.schemaString + " Respond with a syntactically correct MySQL statement based on the given input.Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput: SELECT "
 
 
     return trainedInput
@@ -89,4 +89,4 @@ def TrainGptCorpus(input):
 
     # add input and output for each entity in the training corpus
     for entity in corpus:
-        trainedInput += "INSTRUCTIONS: " + entity.schemaText + "\nINPUT: " + entity.inputText + "\nOUTPUT: " + entity.outputText + "\n\n"
+        trainedInput += "Instruction: " + entity.schemaText + "\Input: " + entity.inputText + "\Output: " + entity.outputText + "\n"
