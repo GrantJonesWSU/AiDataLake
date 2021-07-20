@@ -13,7 +13,7 @@ from frontend.models import TrainingCorpus
 #----------------------------------------------------
 
 #gpt-3 key
-openai.api_key = "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"
+openai.api_key = "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"
 
 #----------------------------------------------------
 #Handles GPT3 Operation
