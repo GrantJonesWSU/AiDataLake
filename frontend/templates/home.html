@@ -228,7 +228,7 @@
 	    <tr>
         <td>
       	  <!--rubel: form request URLs and names were mismatched so I switched them-->
-          <form method="POST" enctype="multipart/form-data" action="/GPT3sql" id="searchLocationSubmitForm">
+          <form method="POST" enctype="multipart/form-data" action="/GPT3Sql" id="searchLocationSubmitForm">
       	  	{% csrf_token %}
 		        <input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
 				<input id="gpt3sql-userDB" type="hidden" name="userDB" value="{% if user_databases %}{{user_databases.0}}{%endif%}">

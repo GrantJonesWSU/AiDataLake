@@ -12,7 +12,7 @@ from frontend.models import UserDatabaseEntity
 #----------------------------------------------------
 
 #gpt-3 key
-openai.api_key = "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"
+openai.api_key = "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"
 
 #----------------------------------------------------
 #Handles GPT3 Operation
@@ -78,7 +78,6 @@ def TrainGptInputSql(input, DbId, SQLVersion):
     trainedInput = database.schemaString + \
         " Return a syntactically correct {} compatible SQL statement based on the given input.\nINPUT: ".format(SQLVersion) + \
         input + "\nOUTPUT: "
-
 
     return trainedInput
 

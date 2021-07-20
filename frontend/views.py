@@ -14,18 +14,19 @@ from frontend.gpt3 import TrainGptInputSql
 
 
 # Create your views here.
-def home_view(request):
+def rehome_view(quest):
 	# rubel: feeds database list to template, needs to be copied to other views
 	UserLogin = 1 # replace with request formdata from authentication?????
 	try:
 		# Find all dbs in UserDatabase with the user ID, most recent one should appear first.
 		queryset = UserDatabase.objects.filter(userId_id=UserLogin).order_by("-dateTimeCreated")
+		print("querying userdb")
 		print([db.dbName for db in queryset])
 		return render(request, "home.html", {"user_databases": [db.dbName for db in queryset]})
 	except UserDatabase.DoesNotExist:
 		print(UserDatabase.DoesNotExist)
 		pass
-	
+	print("didnot query userdb")
 	return render(request,"home.html")
 
 def instruction_view(request):
@@ -66,7 +67,7 @@ def gpt_view(request):
 
 		# Need to change the hardcoded 1 to a stored db name for the user to select
 		trainedInput = TrainGptInputGeneric(queryString, 1)
-		gptOutput = "OUTPUT: " + GetGptResponse(trainedInput)
+		gptOutput = "OUTPUT: " + str(GetGptResponse(trainedInput))
 
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
 		gptObject.save()
@@ -82,15 +83,12 @@ def gpt_sql_view(request):
 
 		# Store Query String
 		queryString=readRequest["sqlGptInput"]
+		SQLVersion = readRequest["SQLFlavor"]
 
-<<<<<<< HEAD
 		# Need to change the hardcoded 1 to a stored db name for the user to select
 		trainedInput = TrainGptInputSql(queryString, 1, SQLVersion)
+		print(trainedInput)
 		gptOutput = str(GetGptResponse(trainedInput))
-=======
-		trainedInput = TrainGptInputSql(queryString, 1, SQLVersion)
-		gptOutput = str(GetGptResponse(trainedInput))
->>>>>>> userdb
 
 		# Save to Database
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
