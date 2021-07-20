@@ -8,6 +8,8 @@ from django.db import models
 
 #Removed django & security related model information from the schema
 
+# UserLogin needs Manager?????
+
 class UserLogin(models.Model):
     userName = models.TextField()
     password = models.TextField()
