@@ -11,6 +11,7 @@ from frontend.models import UserDatabaseEntityManager
 from frontend.gpt3 import GetGptResponse
 from frontend.gpt3 import TrainGptInputGeneric
 from frontend.gpt3 import TrainGptInputSql
+from frontend.gpt3 import TrainGptCorpus
 
 
 # Create your views here.
@@ -55,8 +56,9 @@ def gpt_view(request):
 
 		# Need to change the hardcoded 1 to a stored db name for the user to select
 		trainedInput = TrainGptInputGeneric(queryString, 1)
-		gptOutput = "OUTPUT: " + GetGptResponse(trainedInput)
+		gptOutput = "Output: " + GetGptResponse(trainedInput)
 
+		# Create a gpt I/O object and save it 
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
 		gptObject.save()
 
@@ -73,8 +75,9 @@ def gpt_sql_view(request):
 		queryString=readRequest["sqlGptInput"]
 
 		# Need to change the hardcoded 1 to a stored db name for the user to select
-		trainedInput = TrainGptInputGeneric(queryString, 1)
-		gptOutput = "OUTPUT: SELECT " + str(GetGptResponse(trainedInput))
+		trainedInput = TrainGptInputSql(queryString, 1)
+		trainedInput = TrainGptCorpus(trainedInput)
+		gptOutput = "Output: " + str(GetGptResponse(trainedInput))
 
 		# Save to Database
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())

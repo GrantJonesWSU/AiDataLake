@@ -13,7 +13,7 @@ from frontend.models import TrainingCorpus
 #----------------------------------------------------
 
 #gpt-3 key
-openai.api_key = "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"
+openai.api_key = "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"
 
 #----------------------------------------------------
 #Handles GPT3 Operation
@@ -27,66 +27,97 @@ def GetGptResponse(gpt_input):
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
-        stop=["\n\n"]
     )
 
     return response.choices[0].text
 
 def createDatabaseSchemaString(dbName):
     
-    schemaString = "Instruction: The currently selected database has "
+    # beginning of schema string
+    schemaString = "Instruction: The currently selected database contains the following tables with corresponding rows:"
 
+    # get all entities that match the database name
     entitySet = UserDatabaseEntity.objects.filter(dbName=dbName)
 
     maxGroupingKey = 0
 
+    # Count to the highest grouping key which is the number of tables minus 1.
     for entity in entitySet:
         if entity.localGroupingKey > maxGroupingKey:
             maxGroupingKey = entity.localGroupingKey
     
-    for currentGroupKey in range(maxGroupingKey + 1): 
+    # loop through tables by group key
+    for currentGroupKey in range(maxGroupingKey + 1):
+        # loop through all entities to look for table by current group key
         for entity in entitySet:
             if entity.localGroupingKey == currentGroupKey and entity.tableColumn == 0:
-                schemaString += "table " + entity.elementName + " with columns "
+
+                # add a table entry to the schema string
+                schemaString += "\ntable " + entity.elementName + " with columns "
+                
+
+                columnsCount = 0
+
+                # loop through all entities to look for columns that belong to current table
                 for entity2 in entitySet:
                     if entity2.localGroupingKey == currentGroupKey and entity2.tableColumn == 1:
-                        schemaString += entity2.elementName + ", "
+                        # add to the column count
+                        columnsCount += 1
+                
+                # if only one column in table, trim the 's' off columns and then add the single column name.
+                if columnsCount == 1:
+                    for entity2 in entitySet:
+                        schemaString += entity2.elementName + "; "
 
-    schemaString = schemaString[:-2] # trim last comma
+                # loop through columns in table and add to schema string
+                else:
+                    for entity2 in entitySet:
+                        if entity2.localGroupingKey == currentGroupKey and entity2.tableColumn == 1:
+                            if columnsCount == 1:
+                                schemaString += "and " + entity2.elementName + "; "
+                            else:
+                                schemaString += entity2.elementName + ", "
+
+    # trim last semicolon and add period
+    schemaString = schemaString[:-2]
     schemaString += "."
-
-    # loop through entities that match databaseId
-    # for every table add "table TABLE_NAME with columns" to the schemaString
-    # under each table for each column add " COLUMN_NAME,"
-    # and then just "COLUMN_NAME" for the last column
-    # can either return the schemaString or save directly to database
 
     return schemaString
 
 
 def TrainGptInputGeneric(input, DbId):    
+    # get the database object by id from parameters
     database = UserDatabase.objects.get(id=DbId)
     
     # add currently used database schema string to input and return
-    trainedInput = database.schemaString + "\Input: " + input + "\Output: "
+    trainedInput = database.schemaString + "\nInput: " + input + "\nOutput: "
 
     return trainedInput
 
+# prepends the DB schema to the input and adds extra instructions for an SQL query return
 def TrainGptInputSql(input, DbId):
+    # get the database object by id from parameters
     database = UserDatabase.objects.get(id=DbId)
 
-    # add currently used database schema string to input and return
-    trainedInput = database.schemaString + " Respond with a syntactically correct MySQL statement based on the given input.Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput: SELECT "
-
+    # add currently used database schema string and SQL extra instructions to input and return
+    trainedInput = database.schemaString + " Respond with a syntactically correct MySQL statement based on the given input. Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput: "
 
     return trainedInput
 
+# prepends the corpus to the DB trained input
 def TrainGptCorpus(input):
     trainedInput = ""
     corpus = TrainingCorpus.objects.all()
 
     # need to add corpus schema here before the inputs and outputs
+    with open("corpusSchemaTogether.txt") as corpusSchema:
+        corpusSchemaText = corpusSchema.read()
+        trainedInput += str(corpusSchemaText)
 
     # add input and output for each entity in the training corpus
     for entity in corpus:
-        trainedInput += "Instruction: " + entity.schemaText + "\Input: " + entity.inputText + "\Output: " + entity.outputText + "\n"
+        trainedInput += "\nInput: " + entity.inputText + "\nOutput: " + entity.outputText + "\n"
+
+    trainedInput += "\n"
+
+    return trainedInput + input
