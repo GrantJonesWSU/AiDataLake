@@ -38,7 +38,7 @@ def instruction_view(request):
 def user_login(request):
 	# needs to render the login page and then upon login
 	# redirect to the home page
-	UserLogin = 1 # replace with request formdata from authentication?????
+	UserLogin = 1 # replace with request formdata from authentication?
 	userdbs = get_userdbs(UserLogin)
 	return render(request,"home.html", {"user_databases": userdbs})
 
