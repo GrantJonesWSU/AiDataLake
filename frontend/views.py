@@ -12,22 +12,24 @@ from frontend.gpt3 import GetGptResponse
 from frontend.gpt3 import TrainGptInputGeneric
 from frontend.gpt3 import TrainGptInputSql
 
+def get_userdbs(UserLogin):
 
-# Create your views here.
-def rehome_view(quest):
-	# rubel: feeds database list to template, needs to be copied to other views
-	UserLogin = 1 # replace with request formdata from authentication?????
 	try:
 		# Find all dbs in UserDatabase with the user ID, most recent one should appear first.
 		queryset = UserDatabase.objects.filter(userId_id=UserLogin).order_by("-dateTimeCreated")
-		print("querying userdb")
-		print([db.dbName for db in queryset])
-		return render(request, "home.html", {"user_databases": [db.dbName for db in queryset]})
+		# print([db.dbName for db in queryset])
+		return [db.dbName for db in queryset]
 	except UserDatabase.DoesNotExist:
 		print(UserDatabase.DoesNotExist)
 		pass
-	print("didnot query userdb")
-	return render(request,"home.html")
+	return []
+
+# Create your views here.
+def home_view(request):
+	# rubel: feeds database list to template, needs to be copied to other views
+	UserLogin = 1 # replace with request formdata from authentication?????
+	userdbs = get_userdbs(UserLogin)
+	return render(request,"home.html", {"user_databases": userdbs})
 
 def instruction_view(request):
 	return render(request,"instructions.html")
@@ -36,24 +38,30 @@ def instruction_view(request):
 def user_login(request):
 	# needs to render the login page and then upon login
 	# redirect to the home page
-	return render(request, "home.html")
+	UserLogin = 1 # replace with request formdata from authentication?????
+	userdbs = get_userdbs(UserLogin)
+	return render(request,"home.html", {"user_databases": userdbs})
 
 # Handles DB Schema File
 def file_upload(request):
-	return render(request,"home.html")
+	UserLogin = 1 # replace with request formdata from authentication?????
+	userdbs = get_userdbs(UserLogin)
+	return render(request,"home.html", {"user_databases": userdbs})
 
 # Handles User History Query
 def user_history(request):
 	userHistory = GptInputOutput.objects.all()
 	# fetch the history and then send to page render
-
-	return render(request,"home.html", {"user_history_list" : userHistory})
+	UserLogin = 1 # replace with request formdata from authentication?????
+	userdbs = get_userdbs(UserLogin)
+	return render(request,"home.html", {"user_history_list" : userHistory, "user_databases": userdbs})
 
 # Handles Recent Meta Query
 def recent_meta(request):
 	recentMeta = "no recent meta to show or encountered error"
-
-	return render(request,"home.html", {"recent_meta_output" : recentMeta})
+	UserLogin = 1 # replace with request formdata from authentication?????
+	userdbs = get_userdbs(UserLogin)
+	return render(request,"home.html", {"recent_meta_output" : recentMeta, "user_databases": userdbs})
 
 def gpt_view(request):
 	gptOutput = "none, may have been an error or bug"
@@ -71,8 +79,9 @@ def gpt_view(request):
 
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
 		gptObject.save()
-
-	return render(request,"home.html", {"gpt_output" : gptOutput})
+	UserLogin = 1 # replace with request formdata from authentication?????
+	userdbs = get_userdbs(UserLogin)
+	return render(request,"home.html", {"gpt_output" : gptOutput, "user_databases": userdbs})
 	
 def gpt_sql_view(request):
 	gptOutput = "none, may have been an error or bug"
@@ -93,5 +102,6 @@ def gpt_sql_view(request):
 		# Save to Database
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
 		gptObject.save()
-	
-	return render(request,"home.html", {"gpt_output" : gptOutput})
+	UserLogin = 1 # replace with request formdata from authentication?????
+	userdbs = get_userdbs(UserLogin)
+	return render(request,"home.html", {"gpt_output" : gptOutput, "user_databases": userdbs})	
