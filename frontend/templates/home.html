@@ -119,6 +119,10 @@
 		{% csrf_token %}
 		<input type="submit" id="userLogin" value="Sign In"></input>
 	</form>
+	<form method="POST" action="/logout" id="userLoginForm">
+		{% csrf_token %}
+		<input type="submit" id="userLogin" value="Sign Out"></input>
+	</form>
 		
 
 		
