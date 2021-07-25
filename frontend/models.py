@@ -27,7 +27,7 @@ class GptInputOutput(models.Model):
     trainedInput = models.TextField(db_column='fullRequestInput')  # Field name made lowercase.
     gptOutput = models.TextField(db_column='gptOutput')  # Field name made lowercase.
     requestDateTime = models.DateTimeField(db_column='requestDateTime')  # Field name made lowercase.
-
+    
     objects = GptIOManager()
 
     class Meta:

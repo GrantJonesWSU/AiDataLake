@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from frontend import views
 from frontend import testAI
 from frontend import gpt3
@@ -13,4 +14,11 @@ urlpatterns = [
     path('recentMeta', views.recent_meta, name='recentMeta'),
     path('GPT3', views.gpt_view, name='gpt3'),
     path('GPT3Sql', views.gpt_sql_view, name='gpt3sql'),
+    path("register", views.register_request, name="register"),
+    path("login", views.login_request, name="login"),
+    path("logout", views.logout_request, name= "logout"),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='pass_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="pass_reset_confirm.html"), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='pass_reset_complete.html'), name='password_reset_complete'),
+    path("password_reset_form", views.password_reset_request, name="password_reset"),
 ]
