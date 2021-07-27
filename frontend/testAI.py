@@ -27,20 +27,20 @@ def find_between( s, first, last ):
         return ""
 #----------------------------------------------------
 
-#----------------------------------------------------
-# Variable Declarations
-#----------------------------------------------------
-tableList=[]
-tableCountComp=[]
-tableColumn=[]
-arrTemp=[]
-sqlCommands=[]
-#----------------------------------------------------
-
 #---------------------------------------------------
 #Enter POST request from prompt
 #---------------------------------------------------
 def file_upload(request):
+	#-----------------------------------------------
+	# Variable Declarations
+	#-----------------------------------------------
+	tableList=[]
+	tableCountComp=[]
+	tableColumn=[]
+	arrTemp=[]
+	sqlCommands=[]
+	#-----------------------------------------------
+
 	if request.method == "POST":
 		#Contain db file in local memory
 		#Also manipulate as string for file type checking

@@ -34,7 +34,7 @@ class GptInputOutput(models.Model):
         db_table = 'GptInputOutput'
 
 class UserDatabaseManager(models.Manager):
-    def createGptIO(self, dbName, userId, schemaString, datTimeCreated):
+    def createGptIO(self, dbName, userId, schemaString, dateTimeCreated):
         userDb = self.create(dbName=dbName, userId=userId, schemaString=schemaString, dateTimeCreated=dateTimeCreated)
         return userDb
 
@@ -67,6 +67,7 @@ class UserDatabaseEntity(models.Model):
         db_table = 'UserDatabaseEntity'
 
 class TrainingCorpus(models.Model):
+    schemaText = models.TextField()
     inputText = models.TextField()
     outputText = models.TextField()
 

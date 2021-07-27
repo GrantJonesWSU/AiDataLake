@@ -18,6 +18,6 @@ class UserDatabaseForm(forms.ModelForm):
     class Meta:
         model = UserDatabase
 
-class UserDatabaseEntityForm(models.Model):
+class UserDatabaseEntityForm(forms.ModelForm):
     class Meta:
         model = UserDatabaseEntity
