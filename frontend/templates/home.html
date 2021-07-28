@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<title>GPT-3 Database Tool</title>
+	
+<head>
+</head>
+
+<body onload="loginButtonSet()">
+<div class="header">
+
+
+<!-- ***************************************** -->
+<!--		Header Section		       -->
+<!-- ***************************************** -->
+
+
+<!-- ***************************************** -->
+<!--       Login Button     -->
+<!-- ***************************************** -->
+
+	<form method="POST" action="/userLogin" id="userLoginForm">
+		{% csrf_token %}
+			<input type="submit" id="userLogin" value="Sign In"></input>
+	</form>
+
+
+		
+		
+		
+
+<!-- ***************************************** -->
+<!--       Header Text    -->
+<!-- ***************************************** -->		
+
+  <h1>Database Navigation Optimizer</h1>	
+  <h3>Enter plain English questions or commands and have them answered or converted into SQL queries for designated database</h3>
+		
+		
+<!-- ***************************************** -->
+<!--       Instructions Page Button     -->
+<!-- ***************************************** -->
+	<form method="POST" action="/instructions" id="instructionsForm">
+		{% csrf_token %}
+		<input type="submit" name="readMe" id="readMe" value="Instructions"></input>
+	</form>
+		
+</div>
+
+<!-- ***************************************** -->
+<br>
+
+<!-- ***************************************** -->
+<!--    Application Functionality Section  (INPUT SIDE)     -->
+<!-- ***************************************** -->
+
+
+<div id="inputSide">
+  	
+	<!-- ***************************************** -->
+	<!--    Database Connection 		       -->
+	<!-- ***************************************** -->
+	<div id="databaseConnection">
+	    
+	
+	<h3><u>Upload Database .SQL File</u></h3>
+	
+		<table>
+			  <tr>	
+				<!-- 	Upload DB Schema File	 -->
+				<td>
+				    	<form method="POST" enctype="multipart/form-data" action="/fileUpload" id="fileUploadForm">
+				      	{% csrf_token %}
+					    <input type="file" name="myFile" id="myFile">
+				</td>
+				
+				<td>
+
+					    <input type="submit" name="fileUpload" id="fileUpload" value="Submit File"></input>
+				    	</form>
+				</td>
+				
+				
+			</tr>
+	
+			<tr>
+				<!-- 	Option To Orient GPT3 Drop Down	 -->
+				<td>
+				 <input type="checkbox" id="dataSpecificationOption" name="dataSpecificationOption" value="dataSpec">
+			  
+				</td>
+				<td>
+					<label for="dataSpecificationOption"> Specify Database For GPT</label>
+				</td>
+			</tr>
+			
+			<tr id="dataDropDownRow" style="visibility:hidden">
+				<!-- 	User Database Drop Down	 -->
+				<td>
+					<form id="dataDropDown">
+						<select name = "dropdown">
+							{% if db_drop_down %}
+								{% for i in db_drop_down %}
+									<option value = "{{i}}" selected>{{i}}</option>
+								{% endfor %}
+							{% endif %}
+						</select>
+				</td>
+				
+				<td>
+						<input type="submit" name="dropDownSubmit" id="dropDownSubmit" value="Submit DB Choice">
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+  <br>
+<!-- ***************************************** -->
+
+	<!-- ***************************************** -->
+	<!--    Button Functionality Section	       -->
+	<!-- ***************************************** -->
+
+	<div id="buttonsBar">
+	<h3><u>Various Buttons For Functionality</u></h3>
+	
+		<table>
+			<tr>
+				<td>
+					<!--    User History	       -->
+					<form method="POST" action="/userHistory">
+						{% csrf_token %}
+						<input type="submit" name="userHistory" id="userHistory" value="User History"></input>
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+<br>
+<br>
+
+      
+<!-- ***************************************** -->
+	<!-- ***************************************** -->
+	<!--    GPT3 Functionality - English To SQL    -->
+	<!-- ***************************************** -->
+	<div id="searchBar">
+	<h3><u>GPT-3 Functionality</u></h3>
+	
+	<table>
+		<tr>
+			<h4>Enter English Question Or Command To Convert To SQL Command</h4>
+		</tr>
+	
+		<tr>
+        		<td>
+      	  
+				<form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchLocationSubmitForm">
+					{% csrf_token %}
+					<input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
+	      
+        		</td>
+	      
+			<td>    
+					<input type="submit" id="searchSubmit1" value="Search"></input>
+				</form>
+	 
+	      		</td>
+		
+		</tr>
+	</table>
+	  
+<br>
+
+	<!-- ***************************************** -->
+	<!--    GPT3 Functionality 2 - English To SQL Location Finding   -->
+	<!-- ***************************************** -->
+	  
+  	<table>
+  		<tr>
+  	    		<h4>Enter English Question Or Command Regarding Database</h4>
+  		</tr>
+	    
+		<tr>
+        		<td>
+
+				<form method="POST" enctype="multipart/form-data" action="/GPT3Sql" id="searchSubmitForm">
+					{% csrf_token %}
+					<input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
+	      
+        		</td>
+	   
+	      		<td>
+		    
+            				<input type="submit" id="searchSubmit2" value="Search"></submit>
+			        </form>
+			</td>
+		</tr>
+		
+	</table>
+	</div>
+
+</div>
+
+  
+ <!-- ***************************************** -->
+
+<!-- ***************************************** -->
+<!--   System Message Block   -->
+<!-- ***************************************** -->
+<div class="column" id="outputSide">
+	<h3><u>System Message</u></h3>
+		  
+		  
+	{% if logged_in %}	
+		<p>Welcome User: <b>{{ logged_in }} </b></p>
+	{% endif %}
+		
+	<hr>
+		
+	{% if sys_message %}
+		<p><b>{{ sys_message }} </b></p>		
+	{% endif %}
+	
+	<br>	
+</div>
+
+
+	  
+<!-- ***************************************** -->
+<!-- 	Javascript Functionality		-->
+<!-- ***************************************** -->
+
+	
+	<script>
+	//Handles User Login Status
+	 var loginButtonSet=function() 
+	 {
+			var a="{{logged_in}}"
+			if (a=="Guest User")
+			{
+				document.getElementById("userLogin").value="Sign In";
+			}
+			if (a!="Guest User")
+			{
+				document.getElementById("userLogin").value="Sign Out";
+			}
+	};
+	
+	//Handles Drop Down Display
+	var dataSpecFunction=function()
+	{
+	
+	  var x = document.getElementById('dataDropDownRow');
+	  
+	  if (x.style.visibility === 'hidden') 
+	  {
+		x.style.visibility = 'visible';
+	  } 
+	  else 
+	  {
+		x.style.visibility = 'hidden';
+	  }
+	};
+
+	//Get Request On Button Click
+	document.getElementById('dataSpecificationOption').onclick=dataSpecFunction;
+	
+	</script>
+</body>
+
+
+{% endblock content %}
