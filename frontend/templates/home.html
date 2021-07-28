@@ -220,14 +220,14 @@
 	    <tr>
         <td>
       	  
-          <form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchLocationSubmitForm">
+          <form method="POST" enctype="multipart/form-data" action="/GPT3Sql" id="searchLocationSubmitForm">
       	  	{% csrf_token %}
-		        <input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
+		        <input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
 	      
         </td>
 	      <td>
 		    
-            <input type="submit" id="searchSubmit" value="Search"></input>
+            <input type="submit" id="searchSubmit" value="Submit"></input>
 	        </form>
 	 
 	      </td>
@@ -246,15 +246,15 @@
 	    <tr>
         <td>
 
-	        <form method="POST" enctype="multipart/form-data" action="/GPT3Sql" id="searchSubmitForm">
+	        <form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchSubmitForm">
 	          {% csrf_token %}
-		        <input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
+		        <input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
 	      
         </td>
 	   
 	      <td>
 		    
-            <input type="submit" id="searchSubmit" value="Search"></submit>
+            <input type="submit" id="searchSubmit" value="Submit"></submit>
 	        </form>
 	      
         </td>

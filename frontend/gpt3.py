@@ -13,7 +13,7 @@ from frontend.models import TrainingCorpus
 #----------------------------------------------------
 
 #gpt-3 key
-openai.api_key = "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"
+openai.api_key = "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"
 
 #----------------------------------------------------
 #Handles GPT3 Operation
@@ -22,11 +22,12 @@ def GetGptResponse(gpt_input):
     response = openai.Completion.create(
         engine="davinci-instruct-beta",
         prompt=gpt_input,
-        temperature=0.7,
-        max_tokens=60,
+        temperature=0.6,
+        max_tokens=100,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
+        stop=["\n\n"]
     )
 
     return response.choices[0].text
@@ -69,7 +70,7 @@ def createDatabaseSchemaString(dbName):
                     for entity2 in entitySet:
                         schemaString += entity2.elementName + "; "
 
-                # loop through columns in table and add to schema string
+                # loop through columns in table and add to schema string, add and before the last item
                 else:
                     for entity2 in entitySet:
                         if entity2.localGroupingKey == currentGroupKey and entity2.tableColumn == 1:
@@ -90,7 +91,7 @@ def TrainGptInputGeneric(input, DbId):
     database = UserDatabase.objects.get(id=DbId)
     
     # add currently used database schema string to input and return
-    trainedInput = database.schemaString + "\nInput: " + input + "\nOutput: "
+    trainedInput = database.schemaString + "\nInput: " + input + "\nOutput:"
 
     return trainedInput
 
@@ -100,7 +101,7 @@ def TrainGptInputSql(input, DbId):
     database = UserDatabase.objects.get(id=DbId)
 
     # add currently used database schema string and SQL extra instructions to input and return
-    trainedInput = database.schemaString + " Respond with a syntactically correct MySQL statement based on the given input. Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput: "
+    trainedInput = database.schemaString + "\nRespond with a syntactically correct MySQL statement based on the given input. Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput:"
 
     return trainedInput
 
@@ -110,7 +111,7 @@ def TrainGptCorpus(input):
     corpus = TrainingCorpus.objects.all()
 
     # need to add corpus schema here before the inputs and outputs
-    with open("corpusSchemaTogether.txt") as corpusSchema:
+    with open("frontend/corpusSchemaTogether.txt") as corpusSchema:
         corpusSchemaText = corpusSchema.read()
         trainedInput += str(corpusSchemaText)
 
