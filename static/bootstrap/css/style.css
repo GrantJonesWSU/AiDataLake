@@ -1,4 +1,7 @@
 /* Custom styles */
+body {
+    background-color: #bf776b;
+}
 .main {
     /* font-family: "Comic Sans MS", "Comic Sans", cursive; */
     font-family: Arial, Helvetica, sans-serif;
@@ -6,8 +9,22 @@
     margin: auto;
     padding-top: 40px;
     padding-bottom: 40px;
-}
 
+}
+.header {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    height: 12%;
+    background-color: #f59064;
+    border: 2px solid black;
+    padding: 5%;
+  }
+.main {
+    border: 2px solid maroon;
+	background-color: #d9d3b1;
+	padding: 5%;
+}
 .floated-right {
     float: right;
 }
