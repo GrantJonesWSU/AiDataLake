@@ -1,0 +1,44 @@
+tr:hover{
+    background-color: #77e5be;
+    border: 5px;
+}
+
+td:hover{
+    background-color: white;
+}
+
+td a{
+    color:black;   
+}
+
+td:hover a{ 
+        color:#1A1720;
+}
+
+th{
+    text-align: center;
+}
+
+
+
+tr{
+    border-color:black;
+    border:5px;
+}
+
+textarea {
+    border:none;
+    background:none;
+}
+
+table { 
+    border-collapse: separate; 
+    border-spacing: 0 2px; 
+    margin-top: -10px; /* correct offset on first border spacing if desired */
+}
+
+td {
+    border: solid 1px #000;
+    border-style: solid none;
+    padding: 10px;
+}

@@ -25,6 +25,7 @@ body {
 	background-color: #d9d3b1;
 	padding: 5%;
 }
-.floated-right {
-    float: right;
+.instructionBody {
+    display: float;
+    align-items: center;
 }
