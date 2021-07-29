@@ -147,4 +147,4 @@ EMAIL_HOST_PASSWORD = 'D4t4L4k3!!' #your password
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
+EMAIL_FILE_PATH = str(BASE_DIR.join('/sent_emails'))
