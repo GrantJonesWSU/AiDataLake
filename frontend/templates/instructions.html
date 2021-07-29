@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div id="instructionBody">
+	<h2 style= "text-align: center">Application Instructions</h2>
+	
+
+	<br>
+	
+	<h3><b>Functionality</b></h3>
+	<ul>
+		<li><u>Sign-In:</u> Use this button to log-in or make an account.</li>
+		<br>
+		<li><u>Upload Files:</u> Select database type you are utilizing and upload a .SQL file. Any other file types will result in an error and be ignored. Submit the file to the server by clicking submit.</li>
+		<br>
+		<li><u>User History:</u> Performs an SQL query to pull the request and output history of the user signed into the application.</li>
+		<br>
+		<li><u>Recent Meta:</u> Prints the meta tags affiliated with the most recent English to SQL search.</li>
+		<br>
+		<li><u>GPT-3 English to SQL Entry:</u> Enter plain text English questions to ask the system generic questions about data in order to generate SQL statements to obtain the desired information.</li>
+		<br>
+		<li><u>GPT-3 File Location Entry:</u> Enter plain text English questions to ask the system generic questions about data location in order to generate SQL statements to return where in your datastructure you could find this information.</li>
+	
+	</ul>
+	</div>
+
+{% endblock content %}
