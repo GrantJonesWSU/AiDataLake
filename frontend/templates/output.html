@@ -1,57 +1,10 @@
-<<<<<<< HEAD
 {% extends 'base.html' %}
 
 {% block content %}
 
 <!--  Styling For Output Page   -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<style>
-    tr:hover{
-      background-color: #77e5be;
-      border: 5px;
-    }
-
-    td:hover{
-      background-color: white;
-    }
-
-    td a{
-      color:black;
-    }
-
-    td:hover a{ 
-      color:#1A1720;
-    }
-
-    th{
-      text-align: center;
-    }
-
-
-
-    tr{
-    border-color:black;
-    border:5px;
-    }
-
-    textarea {
-      border:none;
-      background:none;
-    }
-
-    table { 
-        border-collapse: separate; 
-        border-spacing: 0 2px; 
-        margin-top: -10px; /* correct offset on first border spacing if desired */
-    }
-
-    td {
-        border: solid 1px #000;
-        border-style: solid none;
-        padding: 10px;
-        
-    }
-</style>
+<link rel="stylesheet" href="static/bootstrap/css/output_style.css">
 
 
   <script>
@@ -161,70 +114,6 @@
     }
   </script>
 
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>GPT-3 Database Tool</title>
- 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<style>
-tr:hover{
-	background-color: #77e5be;
-}
-
-td:hover{
-	color:white;
-}
-</style>
-<script>
-function exportData(){
-    /* Get the HTML data using Element by Id */
-    var table = document.getElementById("userHistory");
- 
-    /* Declaring array variable */
-    var rows =[];
- 
-      //iterate through rows of table
-    for(var i=0,row; row = table.rows[i];i++){
-        //rows would be accessed using the "row" variable assigned in the for loop
-        //Get each cell value/column from the row
-        column1 = row.cells[0].innerText;
-        column2 = row.cells[1].innerText;
-        column3 = row.cells[2].innerText;
-        column4 = row.cells[3].innerText;
- 
-    /* add a new records in the array */
-        rows.push(
-            [
-                column1,
-                column2,
-                column3,
-                column4
-            ]
-        );
- 
-        }
-        csvContent = "data:text/csv;charset=utf-8,";
-         /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
-        rows.forEach(function(rowArray){
-            row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
- 
-        /* create a hidden <a> DOM node and set its download attribute */
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", ".csv");
-        document.body.appendChild(link);
-        link.click();
-}
-</script>
-
-
-	
->>>>>>> Frank-dev
 </head>
 <!-- ***************************************** -->
 

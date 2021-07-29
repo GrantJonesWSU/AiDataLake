@@ -41,7 +41,7 @@
 <!-- ***************************************** -->
 <!--       Instructions Page Button     -->
 <!-- ***************************************** -->
-	<form method="POST" action="/instructions" id="instructionsForm">
+	<form method="GET" action="/instructions" id="instructionsForm">
 		{% csrf_token %}
 		<input type="submit" name="readMe" id="readMe" value="Instructions"></input>
 	</form>
