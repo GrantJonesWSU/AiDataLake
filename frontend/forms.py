@@ -9,21 +9,25 @@ from frontend.models import UserDatabaseEntity
 class UserLoginForm(forms.ModelForm):
     class Meta:
         model = UserLogin
-        fields = ("username", "password",)
+        fields = ("userName", "password",)
 
 class GptInputOutputForm(forms.ModelForm):
     class Meta:
         model = GptInputOutput
-        fields = ("userInput", "sqlGeneration")
-
-class UserDatabaseForm(forms.ModelForm):
-    class Meta:
-        model = UserDatabase
-
-class UserDatabaseEntityForm(forms.ModelForm):
-    class Meta:
-        model = UserDatabaseEntity
         fields = ("userInput", "gptOutput")
+
+# jango.core.exceptions.ImproperlyConfigured
+# Creating a ModelForm without either the 'fields' attribute
+# or the 'exclude' attribute is prohibited; form UserDatabaseForm needs updating.
+# class UserDatabaseForm(forms.ModelForm):
+#     class Meta:
+#         model = UserDatabase
+
+# jango.core.exceptions.FieldError: Unknown field(s) (userInput, gptOutput) specified for UserDatabaseEntity
+# class UserDatabaseEntityForm(forms.ModelForm):
+#     class Meta:
+#         model = UserDatabaseEntity
+#         fields = ("userInput", "gptOutput")
        
 
 class NewUserForm(UserCreationForm):
