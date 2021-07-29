@@ -11,13 +11,6 @@ from django.db import models
 from frontend.gpt3 import createDatabaseSchemaString
 from django.utils.timezone import datetime
 from frontend.models import UserLogin
-#----------------------------------------------------
-
-
-
-
-
-
 #---------------------------------------------------
 #Enter POST request from prompt
 #---------------------------------------------------
@@ -70,7 +63,7 @@ def file_upload(request):
 	tableColumn=[]
 	arrTemp=[]
 	sqlCommands=[]
-	#----------------------------------------------------
+	#-----------------------------------------------
 
 	if request.method == "POST":
 		#Contain db file in local memory
@@ -78,8 +71,6 @@ def file_upload(request):
 
 		readDB=request.FILES
 		fileName=str(readDB["myFile"])
-		
-		
 		
 		#File Type Checking
 		if(fileName.find(".sql")==-1):

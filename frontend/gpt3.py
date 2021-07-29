@@ -78,6 +78,7 @@ def createDatabaseSchemaString(dbName):
                                 schemaString += "and " + entity2.elementName + "; "
                             else:
                                 schemaString += entity2.elementName + ", "
+                                columnsCount -= 1
 
     # trim last semicolon and add period
     schemaString = schemaString[:-2]
