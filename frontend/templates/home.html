@@ -97,19 +97,24 @@
 				<!-- 	User Database Drop Down	 -->
 				<td>
 					<form id="dataDropDown">
-						<select name = "dropdown">
-							{% if db_drop_down %}
+						
+						{% if db_drop_down %}
+							<select name = "dropdown">
 								{% for i in db_drop_down %}
 									<option value = "{{i}}" selected>{{i}}</option>
 								{% endfor %}
-							{% endif %}
-						</select>
+							</select>
+						{% else %}
+							<p>No Database detected, try uploading one.</p>
+						{% endif %}
+						
 				</td>
-				
+				{% if db_drop_down %}
 				<td>
 						<input type="submit" name="dropDownSubmit" id="dropDownSubmit" value="Submit DB Choice">
 					</form>
 				</td>
+				{% endif %}
 			</tr>
 		</table>
 	</div>

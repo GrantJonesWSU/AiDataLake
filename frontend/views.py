@@ -37,30 +37,27 @@ sysMessage="  "
 
 
 #Query for active user
-activeUser=UserLogin.objects.filter(loginStatus=1)
-if(len(activeUser)!=0):
-	activeUsername=str(activeUser[1].username)
-	activeUserID=int(activeUser[1].id)
-else:
-	activeUsername="Guest User"
-	activeUserID=-1
+def get_userinfo(request):
+	# This should be fixed to return real user info.
+	# Maybe this info can be stored in session at login time?
+	# activeUser=UserLogin.objects.filter(loginStatus=1)
+	# if(len(activeUser)!=0):
+	# 	activeUsername=str(activeUser[1].username)
+	# 	activeUserID=int(activeUser[1].id)
+	return "Guest User", 1
 
-
-#Database Dropdown Menu
-userDbArr=[]
-
-#Test For Dropdown
-dbDropDown=UserDatabaseEntity.objects.all()
-
-#Dropdown Actual Query
-#dbDropDown=UserDatabaseEntity.objects.filter(userId=activeUserID)
-#if(len(dbDropDown)!=0):
-for i in range (len(dbDropDown)):
-	dbNameTmp=str(dbDropDown[i].dbName)
-	
-	if ((dbNameTmp in userDbArr)==False):
-		userDbArr.append(dbNameTmp)
-
+def get_userdbs(userID):
+	# Query based on userID in UserDatabase
+	# User dbs could also be saved in session.
+	try:
+		# Find all dbs in UserDatabase with the user ID, most recent one should appear first.
+		queryset = UserDatabase.objects.filter(userId_id=userID).order_by("-dateTimeCreated")
+		# print([db.dbName for db in queryset])
+		return [db.dbName for db in queryset]
+	except UserDatabase.DoesNotExist:
+		print(UserDatabase.DoesNotExist)
+		pass
+	return []
 
 #--------------------------------------------------------
 
@@ -70,6 +67,9 @@ for i in range (len(dbDropDown)):
 
 #Home View
 def home_view(request):
+	sysMessage = ""
+	activeUsername, userID = get_userinfo(request)
+	userDbArr = get_userdbs(userID)
 	return render(request,"home.html",{"logged_in" : activeUsername, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 
 #Instruction Page View
@@ -80,6 +80,9 @@ def instruction_view(request):
 
 # Handles User History Query
 def user_history(request):
+	sysMessage = ""
+	activeUsername, userID = get_userinfo(request)
+	userDbArr = get_userdbs(userID)
 	#test block
 	userHistory = GptInputOutput.objects.all()
 	return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
@@ -99,6 +102,9 @@ def user_history(request):
 
 # Handles Recent Meta Query
 def recent_meta(request):
+	sysMessage = ""
+	activeUsername, userID = get_userinfo(request)
+	userDbArr = get_userdbs(userID)
 	#test block
 	recentMeta = GptInputOutput.objects.all()
 	return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
@@ -141,6 +147,9 @@ def gpt_view(request):
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
 		gptObject.save()
 
+	sysMessage = ""
+	activeUsername, userID = get_userinfo(request)
+	userDbArr = get_userdbs(userID)
 	return render(request,"home.html", {"logged_in" : activeUsername, "gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 	
 def gpt_sql_view(request):
@@ -161,7 +170,10 @@ def gpt_sql_view(request):
 		# Save to Database
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
 		gptObject.save()
-	
+
+	sysMessage = ""
+	activeUsername, userID = get_userinfo(request)
+	userDbArr = get_userdbs(userID)
 	return render(request,"home.html", {"logged_in" : activeUsername,"gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 
 def register_request(request):
