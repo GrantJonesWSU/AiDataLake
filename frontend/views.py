@@ -76,12 +76,6 @@ def home_view(request):
 def instruction_view(request):
 	return render(request,"instructions.html")
 
-# Handles User Login
-def user_login(request):
-	# needs to render the login page and then upon login
-	# redirect to the home page
-	return render(request, "home.html",{"logged_in" : activeUsername, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
-
 #DB Schema File Is Handled In TestAI.py
 
 # Handles User History Query
@@ -174,17 +168,22 @@ def register_request(request):
 	if request.method == "POST":
 		form = NewUserForm(request.POST)
 		if form.is_valid():
-			user = form.save()
-			login(request, user)
-			messages.success(request, "Registration successful." )
-			return redirect("home")
-		messages.error(request, "Unsuccessful registration. Invalid information.")
+			# Some error checks.
+			if form.get("username") != form.cleaned_data.get("username"):
+				messages.error(request, "Invalid User Name")
+			elif form.get("password") != form.cleaned_data.get("password"):
+				messages.error(request, "Invalid password")
+			else: # Valid registration
+				user = form.save()
+				login(request, user)
+				messages.success(request, "Registration successful." )
+				return redirect("/home")
+		else:
+			messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm
 	return render (request, "register.html", {
 		"register_form": form,
-		"logged_in": activeUsername,
-		"sys_message" : sysMessage,
-		"db_drop_down" : userDbArr
+		"logged_in": activeUsername
 		})
 
 def login_request(request):
