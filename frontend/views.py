@@ -193,10 +193,7 @@ def register_request(request):
 		else:
 			messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm
-	return render (request, "register.html", {
-		"register_form": form,
-		"logged_in": activeUsername
-		})
+	return render (request, "register.html", {"register_form": form})
 
 def login_request(request):
 	if request.method == "POST":

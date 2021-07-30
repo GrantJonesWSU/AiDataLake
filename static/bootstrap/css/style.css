@@ -50,3 +50,6 @@ body {
 .error {
     display: inline-block;
 }
+.no-overflow {
+    display: inline-block;
+}
