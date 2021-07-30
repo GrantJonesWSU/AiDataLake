@@ -26,7 +26,10 @@
 		</div>
 	{% endif %}
 	<button type="submit">Save changes</button>
-	
+
+	<a href="{% url 'password_reset' %}" style="text-decoration:none;"> <input type="button" value="Change password"></a>
+
+	<a href="{% url 'home' %}" style="text-decoration:none;"> <input type="button" value="Home"></a>
 </form>
 
 
