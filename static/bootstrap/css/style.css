@@ -11,7 +11,7 @@ body {
     padding-bottom: 40px;
 
 }
-.header {
+.subheader {
     display: block;
     justify-content: center;
     align-items: center;
@@ -19,7 +19,7 @@ body {
     background-color: #f59064;
     border: 2px solid black;
     padding: 5%;
-  }
+}
 .main {
     border: 2px solid maroon;
 	background-color: #d9d3b1;
@@ -28,4 +28,25 @@ body {
 .instructionBody {
     display: float;
     align-items: center;
+}
+.redfont {
+    color: red;
+}
+.headerdiv {
+    justify-content: center;
+    align-items: center;
+    height: 12%;
+    border: 2px solid maroon;
+    background-color: #d9d3b1;
+    padding: 5%;
+}
+.headerdiv:hover {
+    cursor: pointer;
+}
+.title {
+    text-align: center;
+    color: #4169E1
+}
+.error {
+    display: inline-block;
 }

@@ -119,7 +119,6 @@
 
 
 <body>
-<<<<<<< HEAD
   <div>
 	  
   <h3><u>Output</u></h3>
@@ -137,17 +136,6 @@
 		<a id="localRecentMetaOutput" onclick="copyFunction(this.id)" disabled>{{ recent_meta_output }}</a>
 		
     <!-- User History -->
-=======
-<div>
-	  
-  	<h3><u>Output</u></h3>
-	<div id="outputArea">
-	
-		{{ gpt_output }}
-		
-		{{ recent_meta_output }}
-		
->>>>>>> Frank-dev
 		{% if user_history_list %}
 	  		<table id="userHistory">
             <thead>
@@ -160,30 +148,16 @@
             </thead>
             <tbody>
             {% for item in user_history_list %}
-<<<<<<< HEAD
               <tr> 
                 <td><a id="{{item}} User Input" onclick="copyFunction(this.id)" disabled>{{ item.userInput }}</a></td>
                 <td><a id="{{item}} Trained Input" onclick="copyFunction(this.id)" disabled>{{ item.trainedInput }}</a></td>
                 <td><a id="{{item}} GPT Output" onclick="copyFunction(this.id)" disabled>{{ item.gptOutput }}</a></td>
                 <td><a id="{{item}} Date Time" onclick="copyFunction(this.id)" disabled>{{ item.requestDateTime }}</a></td>
 			  </tr>
-=======
-              <tr>
-                <td>{{ item.userInput }}</td>
-                <td>{{ item.trainedInput }}</td>
-                <td>{{ item.gptOutput }}</td>
-                <td>{{ item.requestDateTime }}</td>
-              </tr>
->>>>>>> Frank-dev
             {% endfor %}
             </tbody>
           </table>
 		  
-<<<<<<< HEAD
-      
-=======
-
->>>>>>> Frank-dev
 			<button onclick="exportData()">
 			   <span class="glyphicon glyphicon-download"></span>
 			   Download list
@@ -192,15 +166,7 @@
 
 	</div>
 </div>
-<<<<<<< HEAD
 </body>
 
 
 {% endblock content %}
-=======
-
-
-<!-- ***************************************** -->
-</body>
-</html>
->>>>>>> Frank-dev
