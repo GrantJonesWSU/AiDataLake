@@ -11,7 +11,6 @@ urlpatterns = [
     # path('userLogin', views.user_login, name='userLogin'),
     path('fileUpload', testAI.file_upload, name='dbfile'),
     path('userHistory', views.user_history, name='userhist'),
-    path('recentMeta', views.recent_meta, name='recentMeta'),
     path('GPT3', views.gpt_view, name='gpt3'),
     path('GPT3Sql', views.gpt_sql_view, name='gpt3sql'),
     path("register", views.register_request, name="register"),

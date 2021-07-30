@@ -101,14 +101,6 @@ def user_history(request):
 	
 
 # Handles Recent Meta Query
-def recent_meta(request):
-	sysMessage = ""
-	activeUsername, userID = get_userinfo(request)
-	userDbArr = get_userdbs(userID)
-	#test block
-	recentMeta = GptInputOutput.objects.all()
-	return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
-
 	'''
 	#actual execution
 	#EDIT TO FIT RECENT META FUNCTIONALITY
