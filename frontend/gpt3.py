@@ -70,6 +70,9 @@ def createDatabaseSchemaString(dbName):
                     for entity2 in entitySet:
                         schemaString += entity2.elementName + "; "
 
+                elif columnsCount == 2:
+                    schemaString += entitySet[0].elementName + " and " + entitySet[1].elementName
+
                 # loop through columns in table and add to schema string, add and before the last item
                 else:
                     for entity2 in entitySet:

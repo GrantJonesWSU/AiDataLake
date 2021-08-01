@@ -66,7 +66,6 @@ class UserDatabaseEntity(models.Model):
         db_table = 'UserDatabaseEntity'
 
 class TrainingCorpus(models.Model):
-    schemaText = models.TextField()
     inputText = models.TextField()
     outputText = models.TextField()
 
