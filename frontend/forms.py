@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from frontend.models import UserLogin
 from frontend.models import GptInputOutput
 from frontend.models import UserDatabase
@@ -56,6 +58,10 @@ class AccountUpdateForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ('email', 'username')
+
+	def get(self, queryset=None):
+         '''This loads the profile of the currently logged in user'''
+         return AccountUpdateForm.objects.get(user=self.request.user)
 
 	def clean_email(self):
 		if self.is_valid():
