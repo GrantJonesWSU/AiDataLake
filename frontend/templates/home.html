@@ -7,7 +7,7 @@
 <head>
 </head>
 
-<body onload="loginButtonSet()">
+
 <div class="subheader">
 
 
@@ -19,11 +19,23 @@
 <!-- ***************************************** -->
 <!--       Login Button     -->
 <!-- ***************************************** -->
+	{%if user.is_authenticated%}
+
+	<div>
+	<form method="GET" action="/logout" id="userLogout">
+		<input type="submit" id="userLogout" value="Log Out"></input>
+	</form>
+	
+	<a href="{% url 'account' %}" style="text-decoration:none;"> <input type="submit" value="Account"></a>
+	</div>
+
+	{% else %}
 
 	<form method="GET" action="/login" id="userLoginForm">
 		<input type="submit" id="userLogin" value="Log In"></input>
 	</form>
 
+	 {% endif %}
 
 		
 		

@@ -14,7 +14,7 @@ from frontend.gpt3 import GetGptResponse
 from frontend.gpt3 import TrainGptInputGeneric
 from frontend.gpt3 import TrainGptInputSql
 from frontend.gpt3 import TrainGptCorpus
-from .forms import NewUserForm
+from .forms import AccountUpdateForm, NewUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages #import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -172,16 +172,10 @@ def register_request(request):
 	if request.method == "POST":
 		form = NewUserForm(request.POST)
 		if form.is_valid():
-			# Some error checks.
-			if form.get("username") != form.cleaned_data.get("username"):
-				messages.error(request, "Invalid User Name")
-			elif form.get("password") != form.cleaned_data.get("password"):
-				messages.error(request, "Invalid password")
-			else: # Valid registration
 				user = form.save()
 				login(request, user)
 				messages.success(request, "Registration successful." )
-				return redirect("/home")
+				return redirect("home")
 		else:
 			messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm
@@ -237,3 +231,24 @@ def password_reset_request(request):
 					return redirect ("/password_reset/done/")
 	password_reset_form = PasswordResetForm()
 	return render(request=request, template_name="password_reset_form.html", context={"password_reset_form":password_reset_form})
+
+def account_view(request):
+
+	if not request.user.is_authenticated:
+		return redirect("login")
+
+	context = {}
+
+	if request.POST:
+		form = AccountUpdateForm(request.POST, instance=request.user)
+		if form.is_valid():
+			form.save()
+	else:
+		form = AccountUpdateForm(
+				initial= {
+					"email": request.user.email,
+					"username": request.user.username,
+				}
+			)
+	context['account_form'] = form
+	return render(request, 'account.html', context)
