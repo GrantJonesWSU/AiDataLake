@@ -168,49 +168,69 @@ def gpt_sql_view(request):
 	userDbArr = get_userdbs(userID)
 	return render(request,"home.html", {"logged_in" : activeUsername,"gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 
+# view for user registration
 def register_request(request):
 	if request.method == "POST":
 		form = NewUserForm(request.POST)
+
+		# check for valid form
 		if form.is_valid():
 				user = form.save()
 				login(request, user)
 				messages.success(request, "Registration successful." )
 				return redirect("home")
+		# invalid form		
 		else:
 			messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm
+
+	# renders registration screen
 	return render (request, "register.html", {"register_form": form})
 
 def login_request(request):
 	if request.method == "POST":
 		form = AuthenticationForm(request, data=request.POST)
+
+		# check if form is valid
 		if form.is_valid():
 			username = form.cleaned_data.get('username')
 			password = form.cleaned_data.get('password')
 			user = authenticate(username=username, password=password)
+
+			# valid form
 			if user is not None:
 				login(request, user)
 				messages.info(request, f"You are now logged in as {username}.")
 				return redirect("home")
+			
+			# invalid form
 			else:
 				messages.error(request,"Invalid username or password.")
 		else:
 			messages.error(request,"Invalid username or password.")
 	form = AuthenticationForm()
+
+	# renders login screen
 	return render(request=request, template_name="login.html", context={"login_form":form})
 
 def logout_request(request):
+	# calls log out function
 	logout(request)
 	messages.info(request, "You have successfully logged out.") 
+	# renders home screen
 	return redirect("home")
 
 def password_reset_request(request):
 	if request.method == "POST":
 		password_reset_form = PasswordResetForm(request.POST)
+		
+		# check for valid form
 		if password_reset_form.is_valid():
+			#check for valid email
 			data = password_reset_form.cleaned_data['email']
 			associated_users = User.objects.filter(Q(email=data))
 			if associated_users.exists():
+				# builds email
 				for user in associated_users:
 					subject = "Password Reset Requested"
 					email_template_name = "pass_reset_email.txt"
@@ -224,26 +244,37 @@ def password_reset_request(request):
 					'protocol': 'http',
 					}
 					email = render_to_string(email_template_name, c)
+					
+					# send email
 					try:
 						send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+
+					# bad response	
 					except BadHeaderError:
 						return HttpResponse('Invalid header found.')
 					return redirect ("/password_reset/done/")
 	password_reset_form = PasswordResetForm()
+
+	# renders password reset screen
 	return render(request=request, template_name="password_reset_form.html", context={"password_reset_form":password_reset_form})
 
 def account_view(request):
 
+	# check if user is logged in
 	if not request.user.is_authenticated:
 		return redirect("login")
 
 	context = {}
 
 	if request.POST:
+		# builds form
 		form = AccountUpdateForm(request.POST, instance=request.user)
+
+		# check for valid form 
 		if form.is_valid():
 			form.save()
-	else:
+	# invalid form		
+	else:		
 		form = AccountUpdateForm(
 				initial= {
 					"email": request.user.email,
@@ -251,4 +282,6 @@ def account_view(request):
 				}
 			)
 	context['account_form'] = form
+
+	# renders account screen
 	return render(request, 'account.html', context)

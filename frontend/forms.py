@@ -32,13 +32,17 @@ class GptInputOutputForm(forms.ModelForm):
 #         fields = ("userInput", "gptOutput")
        
 
+# form for user registration
 class NewUserForm(UserCreationForm):
+
 	email = forms.EmailField(required=True)
 
+	# custom form
 	class Meta:
 		model = User
 		fields = ("username", "email", "password1", "password2")
 
+	# valid email check
 	def clean_email(self):
 		email = self.cleaned_data.get("email")
 		count = User.objects.filter(email=email).count()
@@ -46,6 +50,7 @@ class NewUserForm(UserCreationForm):
 			raise forms.ValidationError("email already in use.")
 		return email
 
+	# saves user 
 	def save(self, commit=True):
 		user = super(NewUserForm, self).save(commit=False)
 		user.email = self.cleaned_data['email']
@@ -53,16 +58,19 @@ class NewUserForm(UserCreationForm):
 			user.save()
 		return user
 
+# form for account update
 class AccountUpdateForm(forms.ModelForm):
 
+	# custom form
 	class Meta:
 		model = User
 		fields = ('email', 'username')
 
 	def get(self, queryset=None):
-         '''This loads the profile of the currently logged in user'''
+         # loads the profile of the currently logged in user
          return AccountUpdateForm.objects.get(user=self.request.user)
 
+	# valid email check
 	def clean_email(self):
 		if self.is_valid():
 			email = self.cleaned_data['email']
@@ -71,7 +79,8 @@ class AccountUpdateForm(forms.ModelForm):
 			except User.DoesNotExist:
 				return email
 			raise forms.ValidationError('Email "%s" is already in use.' % email)
-
+	
+	# valid username check
 	def clean_username(self):
 		if self.is_valid():
 			username = self.cleaned_data['username']
