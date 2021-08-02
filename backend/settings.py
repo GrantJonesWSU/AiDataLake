@@ -148,3 +148,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_FILE_PATH = str(BASE_DIR.join('/sent_emails'))
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'alert-danger error',
+}

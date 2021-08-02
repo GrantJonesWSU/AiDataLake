@@ -7,8 +7,8 @@
 <head>
 </head>
 
-<body onload="loginButtonSet()">
-<div class="header">
+
+<div class="subheader">
 
 
 <!-- ***************************************** -->
@@ -19,12 +19,23 @@
 <!-- ***************************************** -->
 <!--       Login Button     -->
 <!-- ***************************************** -->
+	{%if user.is_authenticated%}
 
-	<form method="POST" action="/userLogin" id="userLoginForm">
-		{% csrf_token %}
-			<input type="submit" id="userLogin" value="Sign In"></input>
+	<div>
+	<form method="GET" action="/logout" id="userLogout">
+		<input type="submit" id="userLogout" value="Log Out"></input>
+	</form>
+	
+	<a href="{% url 'account' %}" style="text-decoration:none;"> <input type="submit" value="Account"></a>
+	</div>
+
+	{% else %}
+
+	<form method="GET" action="/login" id="userLoginForm">
+		<input type="submit" id="userLogin" value="Log In"></input>
 	</form>
 
+	 {% endif %}
 
 		
 		
@@ -33,8 +44,7 @@
 <!-- ***************************************** -->
 <!--       Header Text    -->
 <!-- ***************************************** -->		
-
-  <h1>Database Navigation Optimizer</h1>	
+  <h2>Database Navigation Optimizer</h1>	
   <h3>Enter plain English questions or commands and have them answered or converted into SQL queries for designated database</h3>
 		
 		
@@ -99,19 +109,24 @@
 				<!-- 	User Database Drop Down	 -->
 				<td>
 					<form id="dataDropDown">
-						<select name = "dropdown">
-							{% if db_drop_down %}
+						
+						{% if db_drop_down %}
+							<select name = "dropdown">
 								{% for i in db_drop_down %}
 									<option value = "{{i}}" selected>{{i}}</option>
 								{% endfor %}
-							{% endif %}
-						</select>
+							</select>
+						{% else %}
+							<p>No Database detected, try uploading one.</p>
+						{% endif %}
+						
 				</td>
-				
+				{% if db_drop_down %}
 				<td>
 						<input type="submit" name="dropDownSubmit" id="dropDownSubmit" value="Submit DB Choice">
 					</form>
 				</td>
+				{% endif %}
 			</tr>
 		</table>
 	</div>
