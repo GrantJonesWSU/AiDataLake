@@ -46,12 +46,12 @@ def get_userinfo(request):
 	# 	activeUserID=int(activeUser[1].id)
 	return "Guest User", 1
 
-def get_userdbs(userID):
+def get_userdbs(userId):
 	# Query based on userID in UserDatabase
 	# User dbs could also be saved in session.
 	try:
 		# Find all dbs in UserDatabase with the user ID, most recent one should appear first.
-		queryset = UserDatabase.objects.filter(userId_id=userID).order_by("-dateTimeCreated")
+		queryset = UserDatabase.objects.filter(userId=userId).order_by("-dateTimeCreated")
 		# print([db.dbName for db in queryset])
 		return [db.dbName for db in queryset]
 	except UserDatabase.DoesNotExist:
@@ -84,7 +84,7 @@ def user_history(request):
 	activeUsername, userID = get_userinfo(request)
 	userDbArr = get_userdbs(userID)
 	#test block
-	userHistory = GptInputOutput.objects.all()
+	userHistory = GptInputOutput.objects.filter(userID=request.user.id)
 	return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 
 	'''
@@ -132,11 +132,11 @@ def gpt_view(request):
 		queryString=readRequest["genericGptInput"]
 
 		# Need to change the hardcoded 1 to a stored db name for the user to select
-		trainedInput = TrainGptInputGeneric(queryString, 1)
+		trainedInput = TrainGptInputGeneric(queryString, request.user.id)
 		gptOutput = "Output: " + GetGptResponse(trainedInput)
 
 		# Create a gpt I/O object and save it 
-		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
+		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now(), request.user.id)
 		gptObject.save()
 
 	sysMessage = ""
@@ -155,12 +155,12 @@ def gpt_sql_view(request):
 		queryString=readRequest["sqlGptInput"]
 
 		# Need to change the hardcoded 1 to a stored db name for the user to select
-		trainedInput = TrainGptInputSql(queryString, 1)
+		trainedInput = TrainGptInputSql(queryString, request.user.id)
 		trainedInput = TrainGptCorpus(trainedInput)
-		gptOutput = "Output: " + str(GetGptResponse(trainedInput))
+		gptOutput = "Output: " + GetGptResponse(trainedInput)
 
 		# Save to Database
-		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
+		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now(), request.user.id)
 		gptObject.save()
 
 	sysMessage = ""

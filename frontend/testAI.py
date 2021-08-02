@@ -184,6 +184,7 @@ def file_upload(request):
 
 					if(j==0):
 						elementNameTemp=tableColumn[i][j]
+						elementNameTemp=elementNameTemp.strip()
 						dataTypeTemp="N/A"
 						tableColumnCheck=0
 
@@ -199,6 +200,7 @@ def file_upload(request):
 					else:	
 						if(j%2!=0):
 							elementNameTemp=tableColumn[i][j]
+							elementNameTemp=elementNameTemp.strip()
 							dataTypeTemp=str(tableColumn[i][j+1])
 							tableColumnCheck=1
 
@@ -214,7 +216,7 @@ def file_upload(request):
 					if(j==0 or j%2!=0):	
 						row = UserDatabaseEntity(
 							dbName=fileName,
-							userId=activeUserID,
+							userId=request.user.id,
 							elementName=elementNameTemp,
 							dataType=dataTypeTemp,
 							tableColumn=tableColumnCheck,
@@ -228,6 +230,7 @@ def file_upload(request):
 	
 		db = UserDatabase(
 			dbName=fileName,
+			userId=request.user.id,
 			schemaString=createDatabaseSchemaString(fileName),
 			dateTimeCreated=datetime.now()
 		)
