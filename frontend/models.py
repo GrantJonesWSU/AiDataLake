@@ -18,8 +18,8 @@ class UserLogin(models.Model):
         db_table = 'UserLogin'
 
 class GptIOManager(models.Manager):
-    def createGptIO(self, userInput, trainedInput, gptOutput, requestDateTime):
-        gptIO = self.create(userInput=userInput, trainedInput=trainedInput, gptOutput=gptOutput, requestDateTime=requestDateTime)
+    def createGptIO(self, userInput, trainedInput, gptOutput, requestDateTime, userId):
+        gptIO = self.create(userInput=userInput, trainedInput=trainedInput, gptOutput=gptOutput, requestDateTime=requestDateTime, userId=userId)
         return gptIO
 
 class GptInputOutput(models.Model):
@@ -27,6 +27,7 @@ class GptInputOutput(models.Model):
     trainedInput = models.TextField(db_column='fullRequestInput')  # Field name made lowercase.
     gptOutput = models.TextField(db_column='gptOutput')  # Field name made lowercase.
     requestDateTime = models.DateTimeField(db_column='requestDateTime')  # Field name made lowercase.
+    userId = models.IntegerField(null=True, blank=True)
     objects = GptIOManager()
 
     class Meta:
@@ -39,7 +40,7 @@ class UserDatabaseManager(models.Manager):
 
 class UserDatabase(models.Model):
     dbName = models.CharField(max_length=50)
-    userId = models.ForeignKey("UserLogin", on_delete=models.CASCADE, null=True)
+    userId = models.IntegerField(null=True, blank=True)
     schemaString = models.TextField(db_column='schemaString')
     dateTimeCreated = models.DateTimeField(db_column='dateTimeCreated')
 
@@ -54,7 +55,7 @@ class UserDatabaseEntityManager(models.Manager):
 
 class UserDatabaseEntity(models.Model):
     dbName = models.TextField("dbName")
-    userId = models.ForeignKey("UserLogin", on_delete=models.CASCADE, null=True)
+    userId = models.IntegerField(null=True, blank=True)
     tableColumn = models.IntegerField()
     dataType = models.TextField(db_column='dataType')
     localGroupingKey = models.IntegerField(db_column='localGroupingKey')
@@ -66,7 +67,6 @@ class UserDatabaseEntity(models.Model):
         db_table = 'UserDatabaseEntity'
 
 class TrainingCorpus(models.Model):
-    schemaText = models.TextField()
     inputText = models.TextField()
     outputText = models.TextField()
 

@@ -44,14 +44,19 @@ def get_userinfo(request):
 	# if(len(activeUser)!=0):
 	# 	activeUsername=str(activeUser[1].username)
 	# 	activeUserID=int(activeUser[1].id)
-	return "Guest User", 1
+	activeUserId = -1
+	activeUsername = "Guest User"
+	if request.user.is_authenticated:
+		activeUserId = request.user.id
+		activeUsername = request.user.username
+	return activeUsername, activeUserId
 
-def get_userdbs(userID):
-	# Query based on userID in UserDatabase
+def get_userdbs(userId):
+	# Query based on userId in UserDatabase
 	# User dbs could also be saved in session.
 	try:
 		# Find all dbs in UserDatabase with the user ID, most recent one should appear first.
-		queryset = UserDatabase.objects.filter(userId_id=userID).order_by("-dateTimeCreated")
+		queryset = UserDatabase.objects.filter(userId=userId).order_by("-dateTimeCreated")
 		# print([db.dbName for db in queryset])
 		return [db.dbName for db in queryset]
 	except UserDatabase.DoesNotExist:
@@ -68,8 +73,8 @@ def get_userdbs(userID):
 #Home View
 def home_view(request):
 	sysMessage = ""
-	activeUsername, userID = get_userinfo(request)
-	userDbArr = get_userdbs(userID)
+	activeUsername, userId = get_userinfo(request)
+	userDbArr = get_userdbs(userId)
 	return render(request,"home.html",{"logged_in" : activeUsername, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 
 #Instruction Page View
@@ -81,41 +86,18 @@ def instruction_view(request):
 # Handles User History Query
 def user_history(request):
 	sysMessage = ""
-	activeUsername, userID = get_userinfo(request)
-	userDbArr = get_userdbs(userID)
-	#test block
-	userHistory = GptInputOutput.objects.all()
-	return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
-
-	'''
+	activeUsername, userId = get_userinfo(request)
+	userDbArr = get_userdbs(userId)
+	
 	#actual execution
-	if(activeUserID!=-1):	
-		userHistory = GptInputOutput.objects.filter(userId=activeUserID)
+	if(userId != -1):	
+		userHistory = GptInputOutput.objects.filter(userId=userId)
 		sysMessage = "Successful User History Query"
 		return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 	else:
 		userHistory = 0
 		sysMessage = "Error: User History Query Failed Due To Guest User Status"
 		return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
-	'''
-	
-
-# Handles Recent Meta Query
-	'''
-	#actual execution
-	#EDIT TO FIT RECENT META FUNCTIONALITY
-	if(activeUserID!=-1):	
-		userHistory = GptInputOutput.objects.filter(userId=activeUserID)
-		sysMessage = "Successful Recent Meta Query"
-		return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
-	else:
-		recentMeta = 0
-		sysMessage = "Error: Recent Meta Query Failed Due To Guest User Status"
-		return render(request,"output.html", {"logged_in" : activeUsername,"user_history_list" : userHistory, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
-	'''
-  
-#GPT View
-	return render(request, "home.html")
 
 # Handles DB Schema File
 def file_upload(request):
@@ -132,16 +114,16 @@ def gpt_view(request):
 		queryString=readRequest["genericGptInput"]
 
 		# Need to change the hardcoded 1 to a stored db name for the user to select
-		trainedInput = TrainGptInputGeneric(queryString, 1)
+		trainedInput = TrainGptInputGeneric(queryString, request.user.id)
 		gptOutput = "Output: " + GetGptResponse(trainedInput)
 
 		# Create a gpt I/O object and save it 
-		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
+		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now(), request.user.id)
 		gptObject.save()
 
 	sysMessage = ""
-	activeUsername, userID = get_userinfo(request)
-	userDbArr = get_userdbs(userID)
+	activeUsername, userId = get_userinfo(request)
+	userDbArr = get_userdbs(userId)
 	return render(request,"home.html", {"logged_in" : activeUsername, "gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 	
 def gpt_sql_view(request):
@@ -155,17 +137,17 @@ def gpt_sql_view(request):
 		queryString=readRequest["sqlGptInput"]
 
 		# Need to change the hardcoded 1 to a stored db name for the user to select
-		trainedInput = TrainGptInputSql(queryString, 1)
+		trainedInput = TrainGptInputSql(queryString, request.user.id)
 		trainedInput = TrainGptCorpus(trainedInput)
-		gptOutput = "Output: " + str(GetGptResponse(trainedInput))
+		gptOutput = "Output: " + GetGptResponse(trainedInput)
 
 		# Save to Database
-		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now())
+		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now(), request.user.id)
 		gptObject.save()
 
 	sysMessage = ""
-	activeUsername, userID = get_userinfo(request)
-	userDbArr = get_userdbs(userID)
+	activeUsername, userId = get_userinfo(request)
+	userDbArr = get_userdbs(userId)
 	return render(request,"home.html", {"logged_in" : activeUsername,"gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 
 def register_request(request):
