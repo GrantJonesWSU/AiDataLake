@@ -11,6 +11,13 @@ from django.db import models
 from frontend.gpt3 import createDatabaseSchemaString
 from django.utils.timezone import datetime
 from frontend.models import UserLogin
+#----------------------------------------------------
+
+
+
+
+
+
 #---------------------------------------------------
 #Enter POST request from prompt
 #---------------------------------------------------
@@ -28,13 +35,13 @@ def file_upload(request):
 			return ""
 
 	#active user function
-	activeUser=UserLogin.objects.filter(loginStatus=1)
-	if(len(activeUser)!=0):
-		activeUsername=str(activeUser[1].username)
-		activeUserID=int(activeUser[1].id)
+	if request.user.is_authenticated:
+		activeUser=request.user
+		activeUserID=request.id
+		activeUsername=request.username
 	else:
-		activeUsername="Guest User"
 		activeUserID=-1
+		activeUsername="Guest User"
 
 	sysMessage="Successfully Obtained DB Schema"
 
@@ -45,13 +52,13 @@ def file_upload(request):
 	dbDropDown=UserDatabaseEntity.objects.all()
 
 	#Dropdown Actual Query
-	#dbDropDown=UserDatabaseEntity.objects.filter(userId=activeUserID)
-	#if(len(dbDropDown)!=0):
-	for i in range (len(dbDropDown)):
-		dbNameTmp=str(dbDropDown[i].dbName)
+	dbDropDown=UserDatabaseEntity.objects.filter(userId=activeUserID)
+	if(len(dbDropDown)!=0):
+		for i in range (len(dbDropDown)):
+			dbNameTmp=str(dbDropDown[i].dbName)
 		
-		if ((dbNameTmp in userDbArr)==False):
-			userDbArr.append(dbNameTmp)
+			if ((dbNameTmp in userDbArr)==False):
+				userDbArr.append(dbNameTmp)
 	#----------------------------------------------------
 
 
@@ -63,7 +70,7 @@ def file_upload(request):
 	tableColumn=[]
 	arrTemp=[]
 	sqlCommands=[]
-	#-----------------------------------------------
+	#----------------------------------------------------
 
 	if request.method == "POST":
 		#Contain db file in local memory
@@ -71,6 +78,8 @@ def file_upload(request):
 
 		readDB=request.FILES
 		fileName=str(readDB["myFile"])
+		
+		
 		
 		#File Type Checking
 		if(fileName.find(".sql")==-1):
@@ -147,20 +156,21 @@ def file_upload(request):
 					tableName= find_between( sqlCommands[tmp] , "TABLE" , "(" )
 					arrTemp.append(tableName)
 					
-					columnNames= find_between( sqlCommands[tmp] , "(" , ") ENGINE" )
-					columnNameSplit=columnNames.split(",")
+					columnNames= find_between( sqlCommands[tmp] , "(" , ") " )
+					columnNameSplit=columnNames.split(";")
 					
 				
-					for i in range(len(columnNameSplit)):
-						j=columnNameSplit[i].split("NOT NULL")
+					for m in range(len(columnNameSplit)):
+						j=columnNameSplit[m].split(",")
 
 						#!!!May need to be modified to accomodate formatting
 						#--------------------
 						k=j[0].split(" ",3)
-						arrTemp.append(k[2])
-						arrTemp.append(k[3])
+						if(m!=0):
+							arrTemp.append(k[2])
+							arrTemp.append(k[3])
 						#----------------------
-					
+
 					tableColumn.append(arrTemp)
 				else:
 					tmp=tableList[i]
@@ -184,6 +194,7 @@ def file_upload(request):
 
 					if(j==0):
 						elementNameTemp=tableColumn[i][j]
+						elementNameTemp=elementNameTemp.strip()
 						dataTypeTemp="N/A"
 						tableColumnCheck=0
 
@@ -199,6 +210,7 @@ def file_upload(request):
 					else:	
 						if(j%2!=0):
 							elementNameTemp=tableColumn[i][j]
+							elementNameTemp=elementNameTemp.strip()
 							dataTypeTemp=str(tableColumn[i][j+1])
 							tableColumnCheck=1
 
@@ -228,6 +240,7 @@ def file_upload(request):
 	
 		db = UserDatabase(
 			dbName=fileName,
+			userId=activeUserID,
 			schemaString=createDatabaseSchemaString(fileName),
 			dateTimeCreated=datetime.now()
 		)

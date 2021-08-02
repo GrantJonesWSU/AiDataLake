@@ -18,14 +18,14 @@ class GptInputOutputForm(forms.ModelForm):
         model = GptInputOutput
         fields = ("userInput", "gptOutput")
 
-# jango.core.exceptions.ImproperlyConfigured
+# django.core.exceptions.ImproperlyConfigured
 # Creating a ModelForm without either the 'fields' attribute
 # or the 'exclude' attribute is prohibited; form UserDatabaseForm needs updating.
 # class UserDatabaseForm(forms.ModelForm):
 #     class Meta:
 #         model = UserDatabase
 
-# jango.core.exceptions.FieldError: Unknown field(s) (userInput, gptOutput) specified for UserDatabaseEntity
+# django.core.exceptions.FieldError: Unknown field(s) (userInput, gptOutput) specified for UserDatabaseEntity
 # class UserDatabaseEntityForm(forms.ModelForm):
 #     class Meta:
 #         model = UserDatabaseEntity
