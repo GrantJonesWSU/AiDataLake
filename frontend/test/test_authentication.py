@@ -3,13 +3,14 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from frontend.forms import *
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 
 class BaseTest(TestCase):
     def setUp(self):
         self.register_url=reverse('register')
         self.login_url=reverse('login')
         self.account_url=reverse('account')
+        self.passReset_url=reverse('password_reset')
 
         
         self.test_user = User.objects.create_user(
@@ -405,4 +406,46 @@ class AccountFormTest(BaseTest):
         self.assertFalse(form.is_valid())
 
 
+class PasswordResetTest(BaseTest):
+
+
+    def test_correct_page(self):
+        response=self.client.get(self.passReset_url)
+        self.assertEqual(response.status_code,200)
+        self.assertTemplateUsed(response,'password_reset_form.html')
+
+    def test_valid_email(self):
+        data={
+            'email' : "test@gmail.com"
+            }
+        form = PasswordResetForm(data)
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_email(self):
+        data={
+            'email' : "bad@gmail.com"
+            }
+        form = PasswordResetForm(data)
+        self.assertFalse(form.is_valid())
+
+    def test_invalid_email(self):
+        data={
+            'email' : "test"
+            }
+        form = PasswordResetForm(data)
+        self.assertFalse(form.is_valid())
+    
+    def test_invalid_email2(self):
+        data={
+            'email' : "test2@"
+            }
+        form = PasswordResetForm(data)
+        self.assertFalse(form.is_valid())
+    
+    def test_invalid_email3(self):
+        data={
+            'email' : "test2@gmail"
+            }
+        form = PasswordResetForm(data)
+        self.assertFalse(form.is_valid())
 
