@@ -11,7 +11,6 @@ urlpatterns = [
     # path('userLogin', views.user_login, name='userLogin'),
     path('fileUpload', testAI.file_upload, name='dbfile'),
     path('userHistory', views.user_history, name='userhist'),
-    path('recentMeta', views.recent_meta, name='recentMeta'),
     path('GPT3', views.gpt_view, name='gpt3'),
     path('GPT3Sql', views.gpt_sql_view, name='gpt3sql'),
     path("register", views.register_request, name="register"),
@@ -21,4 +20,5 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="pass_reset_confirm.html"), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='pass_reset_complete.html'), name='password_reset_complete'),
     path("password_reset_form", views.password_reset_request, name="password_reset"),
+    path('account', views.account_view, name="account"), 
 ]

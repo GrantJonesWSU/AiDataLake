@@ -68,41 +68,53 @@ def createDatabaseSchemaString(dbName):
                 # if only one column in table, trim the 's' off columns and then add the single column name.
                 if columnsCount == 1:
                     for entity2 in entitySet:
-                        schemaString += entity2.elementName + "; "
+                        if entity2.localGroupingKey == currentGroupKey and entity2.tableColumn == 1:
+                            schemaString = schemaString[:-2] # trim the 's' off columns
+                            schemaString += " " + entity2.elementName + ";"
+
+                elif columnsCount == 2:
+                    for entity2 in entitySet:
+                        if entity2.localGroupingKey == currentGroupKey and entity2.tableColumn == 1:
+                            if columnsCount == 2:
+                                schemaString +=  entity2.elementName + " and "
+                                columnsCount -= 1
+                            elif columnsCount == 1:
+                                schemaString += entity2.elementName + ";"
 
                 # loop through columns in table and add to schema string, add and before the last item
                 else:
                     for entity2 in entitySet:
                         if entity2.localGroupingKey == currentGroupKey and entity2.tableColumn == 1:
                             if columnsCount == 1:
-                                schemaString += "and " + entity2.elementName + "; "
+                                schemaString += "and " + entity2.elementName + ";"
+                                columnsCount -= 1
                             else:
                                 schemaString += entity2.elementName + ", "
                                 columnsCount -= 1
 
     # trim last semicolon and add period
-    schemaString = schemaString[:-2]
+    schemaString = schemaString[:-1]
     schemaString += "."
 
     return schemaString
 
 
-def TrainGptInputGeneric(input, DbId):    
+def TrainGptInputGeneric(input, userId):    
     # get the database object by id from parameters
-    database = UserDatabase.objects.get(id=DbId)
+    database = UserDatabase.objects.filter(userId=userId).order_by("-dateTimeCreated")
     
     # add currently used database schema string to input and return
-    trainedInput = database.schemaString + "\nInput: " + input + "\nOutput:"
+    trainedInput = database[0].schemaString + "\nInput: " + input + "\nOutput:"
 
     return trainedInput
 
 # prepends the DB schema to the input and adds extra instructions for an SQL query return
-def TrainGptInputSql(input, DbId):
+def TrainGptInputSql(input, userId):
     # get the database object by id from parameters
-    database = UserDatabase.objects.get(id=DbId)
+    database = UserDatabase.objects.filter(userId=userId).order_by("-dateTimeCreated")
 
     # add currently used database schema string and SQL extra instructions to input and return
-    trainedInput = database.schemaString + "\nRespond with a syntactically correct MySQL statement based on the given input. Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput:"
+    trainedInput = database[0].schemaString + "\nRespond with a syntactically correct MySQL statement based on the given input. Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput:"
 
     return trainedInput
 

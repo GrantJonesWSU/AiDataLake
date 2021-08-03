@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!--account-->
+
+<div class="container py-5">
+<h2>Account</h2>
+<form method="post">{% csrf_token %}
+	{% for field in account_form %}
+		<p>
+			{{field.label_tag}}
+			{{field}}
+
+			{% if field.help_text %}
+				<small style="color: grey;">{{field.help_text}}</small>
+			{% endif %}
+
+		</p>
+	{% endfor %}
+
+	{% for field in account_form %}
+		{% for error in field.errors %}
+			<p style="color: red;">{{error}}</p>
+		{% endfor %}
+	{% endfor %}
+	
+	{% if account_form.non_field_errors %}
+		<div style="color:red;">
+			<p>{{account_form.non_field_errors}}</p>
+		</div>
+	{% endif %}
+	<a style="text-decoration:none;"> <input type="submit" value="Save changes"></a>
+
+	<a href="{% url 'password_reset' %}" style="text-decoration:none;"> <input type="button" value="Change password"></a>
+
+	<a href="{% url 'home' %}" style="text-decoration:none;"> <input type="button" value="Home"></a>
+</form>
+</div>
+
+
+{% endblock%}

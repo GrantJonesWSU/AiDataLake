@@ -7,7 +7,7 @@
 <head>
 </head>
 
-<body onload="loginButtonSet()">
+
 <div class="subheader">
 
 
@@ -19,11 +19,23 @@
 <!-- ***************************************** -->
 <!--       Login Button     -->
 <!-- ***************************************** -->
+	{%if user.is_authenticated%}
+
+	<div>
+	<form method="GET" action="/logout" id="userLogout">
+		<input type="submit" id="userLogout" value="Log Out"></input>
+	</form>
+	
+	<a href="{% url 'account' %}" style="text-decoration:none;"> <input type="submit" value="Account"></a>
+	</div>
+
+	{% else %}
 
 	<form method="GET" action="/login" id="userLoginForm">
 		<input type="submit" id="userLogin" value="Log In"></input>
 	</form>
 
+	 {% endif %}
 
 		
 		
@@ -161,9 +173,9 @@
 		<tr>
         		<td>
       	  
-				<form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchLocationSubmitForm">
+				<form method="POST" enctype="multipart/form-data" action="/GPT3Sql" id="searchLocationSubmitForm">
 					{% csrf_token %}
-					<input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
+					<input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
 	      
         		</td>
 	      
@@ -190,9 +202,9 @@
 		<tr>
         		<td>
 
-				<form method="POST" enctype="multipart/form-data" action="/GPT3Sql" id="searchSubmitForm">
+				<form method="POST" enctype="multipart/form-data" action="/GPT3" id="searchSubmitForm">
 					{% csrf_token %}
-					<input type="text" placeholder="Enter English to convert" name="sqlGptInput" id="sqlGptInput">
+					<input type="text" placeholder="Enter English to convert" name="genericGptInput" id="genericGptInput">
 	      
         		</td>
 	   
