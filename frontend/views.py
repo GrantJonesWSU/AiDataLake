@@ -51,7 +51,7 @@ def get_userinfo(request):
 		activeUsername = request.user.username
 	return activeUsername, activeUserId
 
-def get_userdbs(userId):
+def get_userdbs( userId):
 	# Query based on userId in UserDatabase
 	# User dbs could also be saved in session.
 	try:

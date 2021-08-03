@@ -33,10 +33,15 @@ def file_upload(request):
 			return s[start:end]
 		except ValueError:
 			return ""
+	
+	def find_between_column(s, first, last):
+		try:
+			return s[s.find(first)+1:s.rfind(last)]
+		except ValueError:
+			return ""
 
 	#active user function
 	if request.user.is_authenticated:
-		activeUser=request.user
 		activeUserID=request.user.id
 		activeUsername=request.user.username
 	else:
@@ -107,6 +112,12 @@ def file_upload(request):
 		
 			data = request.FILES["myFile"] 
 			sqlFile=data.read()
+
+			#----------------------------------------------------
+			#Find database name
+			#----------------------------------------------------
+			dataBaseName = find_between(str(sqlFile), "Database:", "\\r\\n")
+			dataBaseName = dataBaseName.strip()
 			
 			
 			#Delimits file to SQL commands
@@ -119,29 +130,10 @@ def file_upload(request):
 			#Checks for tables and delimits by finding indicies
 			#----------------------------------------------------
 			for i in range(sqlSize):
-				x=sqlCommands[i].find("CREATE")
+				x=sqlCommands[i].find("CREATE TABLE")
 
 				if(x != -1):
 					tableList.append(i)
-
-			#Amount of tables stored
-			tableCount=len(tableList)
-			#----------------------------------------------------
-
-
-			#----------------------------------------------------
-			#Checks blocks containing table data
-			#----------------------------------------------------
-			for i in range(tableCount):
-
-				tmp=tableList[i]
-				y=sqlCommands[tmp].find("TABLE")
-
-				if (y != -1):
-					tableCountComp.append(1)
-				else:
-					tableCountComp.append(0)
-
 			#----------------------------------------------------
 
 
@@ -151,31 +143,37 @@ def file_upload(request):
 			#Table name and column name extracted and formatted
 			#----------------------------------------------------
 			for i in range(len(tableList)):
-				if(tableCountComp[i]!=0):
-					tmp=tableList[i]
-					tableName= find_between( sqlCommands[tmp] , "TABLE" , "(" )
-					arrTemp.append(tableName)
-					
-					columnNames= find_between( sqlCommands[tmp] , "(" , ") " )
-					columnNameSplit=columnNames.split(";")
+				tmp=tableList[i]
+				tableName= find_between( sqlCommands[tmp] , "CREATE TABLE" , "(" )
+				tableName = tableName.strip()
+				arrTemp.append(tableName)
+				
+				columnNames= find_between_column( sqlCommands[tmp] , "CREATE TABLE" , ")" )
+				columnNames += ")"
+				columnNames = find_between_column(columnNames, "(", ")")
+				
+				columnNameSplit=columnNames.split("\\r\\n")
+
+				columnNameSplit.pop(0)
+				columnNameSplit.pop(len(columnNameSplit)-1)
+
+				for m in range(len(columnNameSplit)):
+					columnNameSplit[m] = columnNameSplit[m].strip(' ')
+					columnNameSplit[m] = columnNameSplit[m].strip(',')
+
 					
 				
-					for m in range(len(columnNameSplit)):
-						j=columnNameSplit[m].split(",")
+				for m in range(len(columnNameSplit)):
 
-						#!!!May need to be modified to accomodate formatting
-						#--------------------
-						k=j[0].split(" ",3)
-						if(m!=0):
-							arrTemp.append(k[2])
-							arrTemp.append(k[3])
-						#----------------------
+					#!!!May need to be modified to accomodate formatting
+					#--------------------
+					k=columnNameSplit[m].split(" ",3)
 
-					tableColumn.append(arrTemp)
-				else:
-					tmp=tableList[i]
-					dataBaseName= find_between( sqlCommands[tmp] , "EXISTS" ,"DEFAULT")
-					print(dataBaseName)
+					arrTemp.append(k[0])
+					arrTemp.append(k[1])
+					#----------------------
+
+				tableColumn.append(arrTemp)
 
 				arrTemp=[]
 			#----------------------------------------------------
@@ -212,6 +210,7 @@ def file_upload(request):
 							elementNameTemp=tableColumn[i][j]
 							elementNameTemp=elementNameTemp.strip()
 							dataTypeTemp=str(tableColumn[i][j+1])
+							dataTypeTemp=dataTypeTemp.strip()
 							tableColumnCheck=1
 
 							#Test Block For Display
@@ -225,7 +224,7 @@ def file_upload(request):
 							
 					if(j==0 or j%2!=0):	
 						row = UserDatabaseEntity(
-							dbName=fileName,
+							dbName=dataBaseName,
 							userId=activeUserID,
 							elementName=elementNameTemp,
 							dataType=dataTypeTemp,
@@ -239,9 +238,9 @@ def file_upload(request):
 					
 	
 		db = UserDatabase(
-			dbName=fileName,
+			dbName=dataBaseName,
 			userId=activeUserID,
-			schemaString=createDatabaseSchemaString(fileName),
+			schemaString=createDatabaseSchemaString(dataBaseName),
 			dateTimeCreated=datetime.now()
 		)
 		db.save()

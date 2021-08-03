@@ -13,7 +13,7 @@ from frontend.models import TrainingCorpus
 #----------------------------------------------------
 
 #gpt-3 key
-openai.api_key = "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"
+openai.api_key = "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"
 
 #----------------------------------------------------
 #Handles GPT3 Operation
@@ -22,7 +22,7 @@ def GetGptResponse(gpt_input):
     response = openai.Completion.create(
         engine="davinci-instruct-beta",
         prompt=gpt_input,
-        temperature=0.6,
+        temperature=0.7,
         max_tokens=100,
         top_p=1,
         frequency_penalty=0,
