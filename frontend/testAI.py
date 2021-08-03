@@ -37,8 +37,8 @@ def file_upload(request):
 	#active user function
 	if request.user.is_authenticated:
 		activeUser=request.user
-		activeUserID=request.id
-		activeUsername=request.username
+		activeUserID=request.user.id
+		activeUsername=request.user.username
 	else:
 		activeUserID=-1
 		activeUsername="Guest User"
