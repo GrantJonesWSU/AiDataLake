@@ -72,6 +72,8 @@ def get_userdbs(userId):
 
 #Home View
 def home_view(request):
+	if not request.user.is_authenticated:
+		return redirect("login")
 	sysMessage = ""
 	activeUsername, userId = get_userinfo(request)
 	userDbArr = get_userdbs(userId)
