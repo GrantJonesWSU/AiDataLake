@@ -108,8 +108,7 @@
 			<tr id="dataDropDownRow" style="visibility:hidden">
 				<!-- 	User Database Drop Down	 -->
 				<td>
-					<form id="dataDropDown">
-						
+					<form method="POST" enctype="multipart/form-data" action="/selectDB" id="dataDropDown">
 						{% if db_drop_down %}
 							<select name = "dropdown">
 								{% for i in db_drop_down %}
@@ -123,7 +122,8 @@
 				</td>
 				{% if db_drop_down %}
 				<td>
-						<input type="submit" name="dropDownSubmit" id="dropDownSubmit" value="Submit DB Choice">
+						{% csrf_token %}
+						<input type="submit" name="dropDownSubmit" id="dropDownSubmit" value=>
 					</form>
 				</td>
 				{% endif %}

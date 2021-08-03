@@ -43,6 +43,7 @@ class UserDatabase(models.Model):
     userId = models.IntegerField(null=True, blank=True)
     schemaString = models.TextField(db_column='schemaString')
     dateTimeCreated = models.DateTimeField(db_column='dateTimeCreated')
+    activeDB = models.IntegerField()
 
     objects = UserDatabaseManager()
     class Meta:

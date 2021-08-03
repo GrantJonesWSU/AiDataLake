@@ -241,7 +241,8 @@ def file_upload(request):
 			dbName=dataBaseName,
 			userId=activeUserID,
 			schemaString=createDatabaseSchemaString(dataBaseName),
-			dateTimeCreated=datetime.now()
+			dateTimeCreated=datetime.now(),
+			activeDB = 0
 		)
 		db.save()
 

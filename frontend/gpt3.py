@@ -22,8 +22,8 @@ def GetGptResponse(gpt_input):
     response = openai.Completion.create(
         engine="davinci-instruct-beta",
         prompt=gpt_input,
-        temperature=0.7,
-        max_tokens=100,
+        temperature=0.5,
+        max_tokens=200,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
@@ -101,20 +101,20 @@ def createDatabaseSchemaString(dbName):
 
 def TrainGptInputGeneric(input, userId):    
     # get the database object by id from parameters
-    database = UserDatabase.objects.filter(userId=userId).order_by("-dateTimeCreated")
+    database = UserDatabase.objects.get(userId=userId, activeDB=1)
     
     # add currently used database schema string to input and return
-    trainedInput = database[0].schemaString + "\nInput: " + input + "\nOutput:"
+    trainedInput = database.schemaString + "\nInput: " + input + "\nOutput:"
 
     return trainedInput
 
 # prepends the DB schema to the input and adds extra instructions for an SQL query return
 def TrainGptInputSql(input, userId):
     # get the database object by id from parameters
-    database = UserDatabase.objects.filter(userId=userId).order_by("-dateTimeCreated")
+    database = UserDatabase.objects.get(userId=userId, activeDB=1)
 
     # add currently used database schema string and SQL extra instructions to input and return
-    trainedInput = database[0].schemaString + "\nRespond with a syntactically correct MySQL statement based on the given input. Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput:"
+    trainedInput = database.schemaString + "\nRespond with a syntactically correct MySQL statement based on the given input. Be creative, but the SQL must be correct. Only use the tables and columns given previously.\nInput: " + input + "\nOutput:"
 
     return trainedInput
 
