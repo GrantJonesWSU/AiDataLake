@@ -124,7 +124,7 @@ def gpt_view(request):
 	sysMessage = ""
 	activeUsername, userId = get_userinfo(request)
 	userDbArr = get_userdbs(userId)
-	return render(request,"home.html", {"logged_in" : activeUsername, "gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
+	return render(request,"output.html", {"logged_in" : activeUsername, "gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 	
 def gpt_sql_view(request):
 	gptOutput = "none, may have been an error or bug"
@@ -148,7 +148,7 @@ def gpt_sql_view(request):
 	sysMessage = ""
 	activeUsername, userId = get_userinfo(request)
 	userDbArr = get_userdbs(userId)
-	return render(request,"home.html", {"logged_in" : activeUsername,"gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
+	return render(request,"output.html", {"logged_in" : activeUsername,"gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 
 # view for user registration
 def register_request(request):
