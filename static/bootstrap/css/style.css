@@ -53,3 +53,9 @@ body {
 .no-overflow {
     display: inline-block;
 }
+.topbuttons {
+    display: flex;
+}
+.pixspacer {
+    width: 30px;
+}
