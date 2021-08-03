@@ -72,6 +72,8 @@ def get_userdbs(userId):
 
 #Home View
 def home_view(request):
+	if not request.user.is_authenticated:
+		return redirect("login")
 	sysMessage = ""
 	activeUsername, userId = get_userinfo(request)
 	userDbArr = get_userdbs(userId)
@@ -124,7 +126,7 @@ def gpt_view(request):
 	sysMessage = gptOutput
 	activeUsername, userId = get_userinfo(request)
 	userDbArr = get_userdbs(userId)
-	return render(request,"output.html", {"logged_in" : activeUsername, "gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
+	return render(request,"home.html", {"logged_in" : activeUsername, "gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 	
 def gpt_sql_view(request):
 	gptOutput = "none, may have been an error or bug"
@@ -148,7 +150,7 @@ def gpt_sql_view(request):
 	sysMessage = gptOutput
 	activeUsername, userId = get_userinfo(request)
 	userDbArr = get_userdbs(userId)
-	return render(request,"output.html", {"logged_in" : activeUsername,"gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
+	return render(request,"home.html", {"logged_in" : activeUsername,"gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
 
 # view for user registration
 def register_request(request):
