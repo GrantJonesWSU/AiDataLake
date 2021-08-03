@@ -141,7 +141,7 @@
             <thead>
             <tr>
               <th>User Input</th>
-              <th>Trained Input</th>
+              <!--<th>Trained Input</th>-->
               <th>GPT Output</th>
               <th>Date and Time</th>
             </tr>
@@ -150,7 +150,7 @@
             {% for item in user_history_list %}
               <tr> 
                 <td><a id="{{item}} User Input" onclick="copyFunction(this.id)" disabled>{{ item.userInput }}</a></td>
-                <td><a id="{{item}} Trained Input" onclick="copyFunction(this.id)" disabled>{{ item.trainedInput }}</a></td>
+                <!--<td><a id="{{item}} Trained Input" onclick="copyFunction(this.id)" disabled>{{ item.trainedInput }}</a></td>-->
                 <td><a id="{{item}} GPT Output" onclick="copyFunction(this.id)" disabled>{{ item.gptOutput }}</a></td>
                 <td><a id="{{item}} Date Time" onclick="copyFunction(this.id)" disabled>{{ item.requestDateTime }}</a></td>
 			  </tr>

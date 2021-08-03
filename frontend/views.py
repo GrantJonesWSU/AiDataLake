@@ -56,7 +56,7 @@ def get_userdbs(userId):
 	# User dbs could also be saved in session.
 	try:
 		# Find all dbs in UserDatabase with the user ID, most recent one should appear first.
-		queryset = UserDatabase.objects.filter(userId=userId).order_by("-dateTimeCreated")
+		queryset = UserDatabase.objects.filter(userId=userId)
 		# print([db.dbName for db in queryset])
 		return [db.dbName for db in queryset]
 	except UserDatabase.DoesNotExist:
