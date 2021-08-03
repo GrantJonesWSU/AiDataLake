@@ -121,7 +121,7 @@ def gpt_view(request):
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now(), request.user.id)
 		gptObject.save()
 
-	sysMessage = ""
+	sysMessage = gptOutput
 	activeUsername, userId = get_userinfo(request)
 	userDbArr = get_userdbs(userId)
 	return render(request,"output.html", {"logged_in" : activeUsername, "gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
@@ -145,7 +145,7 @@ def gpt_sql_view(request):
 		gptObject = GptInputOutput.objects.createGptIO(queryString, trainedInput, gptOutput, datetime.now(), request.user.id)
 		gptObject.save()
 
-	sysMessage = ""
+	sysMessage = gptOutput
 	activeUsername, userId = get_userinfo(request)
 	userDbArr = get_userdbs(userId)
 	return render(request,"output.html", {"logged_in" : activeUsername,"gpt_output" : gptOutput, "sys_message" : sysMessage,"db_drop_down" : userDbArr})
